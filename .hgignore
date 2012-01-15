@@ -1,0 +1,21 @@
+# 
+syntax: regexp
+.metadata
+syntax: regexp
+^.*/.settings
+syntax: regexp
+^.*/assets
+syntax: regexp
+^.*/bin
+syntax: regexp
+^.*/gen
+syntax: regexp
+^.*metadata
+syntax: regexp
+^.*/bin
+syntax: regexp
+^.*/WEB-INF/classes
+syntax: regexp
+^.*/work
+
+
