@@ -7,6 +7,11 @@
     <com.sergiandreplace.appunta.ui.RadarView
         android:id="@+id/radarView1"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp" android:background="@drawable/bkg"/>
+
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_margin="10dp" android:max="1000"/>
 
 </LinearLayout>

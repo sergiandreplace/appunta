@@ -1,3 +1,20 @@
+/*
+   Copyright Sergi Martínez (@sergiandreplace)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ */
+
 package com.sergiandreplace.appunta.ui;
 
 import java.util.HashMap;
@@ -11,8 +28,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.sergiandreplace.appunta.Point;
@@ -23,6 +40,8 @@ import com.sergiandreplace.appunta.pointdrawer.SimplePointRenderer;
 public class RadarView extends View {
 
 	private static final double DEFAULT_MAX_DISTANCE = 1000;
+
+	private static final double MAX_DISTANCE_TAP = 48;
 
 	private PointsManager pointsManager;
 	private float azimuth;
@@ -39,6 +58,9 @@ public class RadarView extends View {
 
 	private int center;
 
+	private OnPointPressedListener onPointPressedListener;
+	
+	
 	public RadarView(Context context) {
 		super(context);
 		this.context = context;
@@ -104,10 +126,10 @@ public class RadarView extends View {
 
 	private void extractSubPoints() {
 		shownPoints = pointsManager.getNearPoints(latitude, longitude,
-				maxDistance);
+				getMaxDistance());
 
 	}
-	
+
 	public void putRenderer(String name, PointRenderer renderer) {
 		renderers.put(name, renderer);
 	}
@@ -132,38 +154,33 @@ public class RadarView extends View {
 	protected void onDraw(Canvas canvas) {
 		// TODO Auto-generated method stub
 		super.onDraw(canvas);
-	
+
 		if (shownPoints != null) {
 			double azRadians = Math.toRadians(azimuth);
 			drawBackground(canvas, -azimuth);
 
 			Paint pointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 			pointPaint.setColor(Color.GREEN);
-			Bitmap marker;
-			SimplePointRenderer simplePoint=new SimplePointRenderer();
-			
-				for (Point point : shownPoints) {
-					
-					if (point.getRendererName()!=null && renderers.containsKey(point.getRendererName())) {
-						PointRenderer renderer=renderers.get(point.getRendererName());
-						marker=renderer.getPoint(point,  azimuth);
-					}else{
-						marker=simplePoint.getPoint();
-					}
-					
-					int markerOffX = -marker.getWidth() / 2;
-					int markerOffY = -marker.getHeight() / 2;
-					
-					double pointAngle = getAngle(point) + azRadians;
-					double pixelDistance = point.getDistance() * center
-							/ maxDistance;
-					double pointy = center + markerOffY - pixelDistance
-							* Math.sin(pointAngle);
-					double pointx = center + markerOffX + pixelDistance
-							* Math.cos(pointAngle);
-					
-					canvas.drawBitmap(marker, (float) pointx, (float) pointy,
-							pointPaint);
+			SimplePointRenderer simplePoint = new SimplePointRenderer();
+
+			for (Point point : shownPoints) {
+
+				double pointAngle = getAngle(point) + azRadians;
+				double pixelDistance = point.getDistance() * center
+						/ getMaxDistance();
+				double pointy = center - pixelDistance * Math.sin(pointAngle);
+				double pointx = center + pixelDistance * Math.cos(pointAngle);
+				point.setX((float) pointx);
+				point.setY((float) pointy);
+
+				if (point.getRendererName() != null
+						&& renderers.containsKey(point.getRendererName())) {
+					PointRenderer renderer = renderers.get(point
+							.getRendererName());
+					renderer.drawPoint(point, canvas, azimuth);
+				} else {
+					simplePoint.drawPoint(point, canvas, azimuth);
+				}
 
 			}
 			pointPaint.setColor(Color.RED);
@@ -199,4 +216,55 @@ public class RadarView extends View {
 		this.rotableBackground = rotableBackground;
 	}
 
+	public double getMaxDistance() {
+		return maxDistance;
+	}
+
+	public void setMaxDistance(double maxDistance) {
+		this.maxDistance = maxDistance;
+		this.invalidate();
+
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			Point p = findNearestPoint(event.getX(), event.getY());
+			if (p != null && getOnPointPressedListener()!=null) {
+				onPointPressedListener.onPointPressed(p);
+			}
+		}
+
+		return super.onTouchEvent(event);
+	}
+
+	private Point findNearestPoint(float x, float y) {
+		Point p = null;
+		Double minorDistance = (double) size;
+		for (Point point : shownPoints) {
+			double distance = Math.sqrt(Math.pow((point.getX() - x), 2)
+					+ Math.pow((point.getY() - y), 2));
+			if (distance < minorDistance) {
+				minorDistance = distance;
+				p = point;
+			}
+		}
+		if (minorDistance <= MAX_DISTANCE_TAP) {
+			return p;
+		}else{
+			return null;
+		}
+	}
+	
+	public OnPointPressedListener getOnPointPressedListener() {
+		return onPointPressedListener;
+	}
+
+	public void setOnPointPressedListener(OnPointPressedListener onPointPressedListener) {
+		this.onPointPressedListener = onPointPressedListener;
+	}
+
+	public interface OnPointPressedListener {
+		public void onPointPressed(Point p);
+	}
 }
