@@ -66,7 +66,7 @@ public class RadarView extends AppuntaView {
 	}
 
 	@Override
-	protected void setPointCoordinates(Point point) {
+	protected void calculatePointCoordinates(Point point) {
 		
 		double pointAngle = getAngle(point) + getAzimuthRadians();
 		double pixelDistance = point.getDistance() * center

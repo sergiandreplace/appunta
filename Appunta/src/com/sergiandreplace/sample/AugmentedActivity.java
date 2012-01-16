@@ -13,14 +13,14 @@ import com.sergiandreplace.appunta.CompassManager.OnCompassChangedListener;
 import com.sergiandreplace.appunta.point.Point;
 import com.sergiandreplace.appunta.point.renderer.DrawablePointRenderer;
 import com.sergiandreplace.appunta.ui.AppuntaView.OnPointPressedListener;
-import com.sergiandreplace.appunta.ui.AugmentedView;
+import com.sergiandreplace.appunta.ui.PanoramaView;
 import com.sergiandreplace.appunta.ui.RadarView;
 
 public class AugmentedActivity extends Activity implements
 		OnCompassChangedListener, OnPointPressedListener {
 
 	TextView textviewAzimuth, textviewPitch, textviewRoll;
-	private AugmentedView ar;
+	private PanoramaView ar;
 	private RadarView cv;
 
 	/** Called when the activity is first created. */
@@ -31,7 +31,7 @@ public class AugmentedActivity extends Activity implements
 
 		CompassManager compass = new CompassManager(this);
 		compass.setOnCompassChangeListener(this);
-		ar = (AugmentedView) findViewById(R.id.augmentedView1);
+		ar = (PanoramaView) findViewById(R.id.augmentedView1);
 		cv = (RadarView) findViewById(R.id.radarView1);
 
 		ar.putRenderer("simple", new DrawablePointRenderer(this.getResources(),

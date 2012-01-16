@@ -16,7 +16,10 @@ package com.sergiandreplace.appunta.util;
  * limitations under the License.
  */
 
-
+/*
+ * NOTE: This method has some methods removed from original Google file in order to avoid use of 
+ * the Google Maps library.
+ */
 /**
  * Library for some use useful latitude/longitude math
  */
@@ -44,40 +47,7 @@ public class GeoUtils {
                 * EARTH_RADIUS_KM;
     }
     
-    /**
-     * Computes the distance in kilometers between two points on Earth.
-     * 
-     * @param p1 First point
-     * @param p2 Second point
-     * @return Distance between the two points in kilometers.
-     */
-//    public static double distanceKm(GeoPoint p1, GeoPoint p2) {
-//        double lat1 = p1.getLatitudeE6() / (double)MILLION;
-//        double lon1 = p1.getLongitudeE6() / (double)MILLION;
-//        double lat2 = p2.getLatitudeE6() / (double)MILLION;
-//        double lon2 = p2.getLongitudeE6() / (double)MILLION;
-//
-//        return distanceKm(lat1, lon1, lat2, lon2);
-//    }
-    
-    /**
-     * Computes the bearing in degrees between two points on Earth.
-     * 
-     * @param p1 First point
-     * @param p2 Second point
-     * @return Bearing between the two points in degrees. A value of 0 means due
-     *         north.
-     */
-//    public static double bearing(GeoPoint p1, GeoPoint p2) {
-//        double lat1 = p1.getLatitudeE6() / (double) MILLION;
-//        double lon1 = p1.getLongitudeE6() / (double) MILLION;
-//        double lat2 = p2.getLatitudeE6() / (double) MILLION;
-//        double lon2 = p2.getLongitudeE6() / (double) MILLION;
-//
-//        return bearing(lat1, lon1, lat2, lon2);
-//    }
-    
-    /**
+        /**
      * Computes the bearing in degrees between two points on Earth.
      * 
      * @param lat1 Latitude of the first point

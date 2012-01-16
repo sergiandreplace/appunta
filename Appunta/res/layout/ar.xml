@@ -5,25 +5,35 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/RelativeLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" android:layout_weight="1">
+    <com.sergiandreplace.appunta.ui.PanoramaView
+        android:id="@+id/augmentedView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_weight="1"/>
 
-      
-        <com.sergiandreplace.appunta.ui.AugmentedView
-            android:id="@+id/augmentedView1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"/>
-    </RelativeLayout>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="#0f0" />
+
+    <RelativeLayout
+        android:id="@+id/A"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
 
-    <com.sergiandreplace.appunta.ui.RadarView
-        android:id="@+id/radarView1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp" android:background="@drawable/bkg"/>
+        <com.sergiandreplace.appunta.ui.RadarView
+            android:id="@+id/radarView1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bkg" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/scanlines" android:scaleType="centerCrop"/>
+
+    </RelativeLayout>
 
 </LinearLayout>

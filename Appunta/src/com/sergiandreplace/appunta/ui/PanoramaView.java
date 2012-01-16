@@ -23,20 +23,20 @@ import android.util.AttributeSet;
 
 import com.sergiandreplace.appunta.point.Point;
 
-public class AugmentedView extends AppuntaView {
+public class PanoramaView extends AppuntaView {
 
 	private static final double VISIBLE_DEGREES = Math.PI / 3;
 	private static final double MAX_DEGREES = Math.PI * 2;
 
-	public AugmentedView(Context context) {
+	public PanoramaView(Context context) {
 		super(context);
 	}
 
-	public AugmentedView(Context context, AttributeSet attrs) {
+	public PanoramaView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
-	AugmentedView(Context context, AttributeSet attrs, int defStyle) {
+	PanoramaView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
 
@@ -48,7 +48,7 @@ public class AugmentedView extends AppuntaView {
 	}
 
 	@Override
-	protected void setPointCoordinates(Point point) {
+	protected void calculatePointCoordinates(Point point) {
 		double angularDistance = angleDifference(getAzimuthRadians(), MAX_DEGREES
 				/ 4 - getAngle(point));
 		// double angularDistance= getAngle(point);
