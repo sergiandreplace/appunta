@@ -42,8 +42,8 @@ public class SensorsActivity extends Activity implements OnCompassChangedListene
 		points.add(new Point(4,41.65,-0.88, "simple","Zaragoza")); //Zaragoza
 		
 		Random rand=new Random();
-		for (int i=1;i<0;i++) {
-			points.add(new Point(5+i,33+rand.nextDouble()*14, -10+rand.nextDouble()*20));
+		for (int i=1;i<20;i++) {
+			points.add(new Point(5+i,33+rand.nextDouble()*14, -10+rand.nextDouble()*20,null,"Random point " + (i+5)));
 		}
 		radar.setPoints(points);
 		radar.setPosition(41.3825, 2.176944);//BCN
@@ -88,6 +88,6 @@ public class SensorsActivity extends Activity implements OnCompassChangedListene
 
 	@Override
 	public void onPointPressed(Point p) {
-		Toast.makeText(this, p.getName(), Toast.LENGTH_LONG).show();
+		Toast.makeText(this, p.getName(), Toast.LENGTH_SHORT).show();
 	}
 }
