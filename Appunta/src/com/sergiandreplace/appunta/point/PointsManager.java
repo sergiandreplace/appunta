@@ -15,7 +15,7 @@
 
  */
 
-package com.sergiandreplace.appunta;
+package com.sergiandreplace.appunta.point;
 
 import java.util.ArrayList;
 import java.util.List;

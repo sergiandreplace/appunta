@@ -15,13 +15,13 @@
 
  */
 
-package com.sergiandreplace.appunta.pointdrawer;
+package com.sergiandreplace.appunta.point.renderer;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.sergiandreplace.appunta.Point;
+import com.sergiandreplace.appunta.point.Point;
 
 /***
  * A simple Point renderer used as default by the compass
@@ -39,15 +39,15 @@ public class SimplePointRenderer implements PointRenderer {
 		if (b == null) {
 			Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);
 			p.setColor(0x44FFFFFF);
-			canvas.drawCircle(point.getX()+5, point.getY()+5, 5, p);
+			canvas.drawCircle(point.getX(), point.getY(), 5, p);
 			p.setColor(0x33FFFFFF);
-			canvas.drawCircle(point.getX()+5, point.getY()+5, 4, p);
+			canvas.drawCircle(point.getX(), point.getY(), 4, p);
 			p.setColor(0x66FFFFFF);
-			canvas.drawCircle(point.getX()+5, point.getY()+5, 3, p);
+			canvas.drawCircle(point.getX(), point.getY(), 3, p);
 			p.setColor(0x99FFFFFF);
-			canvas.drawCircle(point.getX()+5, point.getY()+5, 2, p);
+			canvas.drawCircle(point.getX(), point.getY(), 2, p);
 			p.setColor(0xCCFFFFFF);
-			canvas.drawCircle(point.getX()+5, point.getY()+5, 1, p);
+			canvas.drawCircle(point.getX(), point.getY(), 1, p);
 		}
 		
 	}

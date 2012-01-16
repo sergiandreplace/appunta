@@ -15,11 +15,11 @@
 
  */
 
-package com.sergiandreplace.appunta.pointdrawer;
+package com.sergiandreplace.appunta.point.renderer;
 
 import android.graphics.Canvas;
 
-import com.sergiandreplace.appunta.Point;
+import com.sergiandreplace.appunta.point.Point;
 
 /***
  * This interface will be used to represent all the classes able to draw a point

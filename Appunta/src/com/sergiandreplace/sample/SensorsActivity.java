@@ -1,4 +1,4 @@
-package com.sergiandreplace.sensors;
+package com.sergiandreplace.sample;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +13,10 @@ import android.widget.Toast;
 
 import com.sergiandreplace.appunta.CompassManager;
 import com.sergiandreplace.appunta.CompassManager.OnCompassChangedListener;
-import com.sergiandreplace.appunta.Point;
-import com.sergiandreplace.appunta.pointdrawer.DrawablePointRenderer;
-import com.sergiandreplace.appunta.pointdrawer.SimplePointRenderer;
+import com.sergiandreplace.appunta.point.Point;
+import com.sergiandreplace.appunta.point.renderer.DrawablePointRenderer;
+import com.sergiandreplace.appunta.ui.AppuntaView.OnPointPressedListener;
 import com.sergiandreplace.appunta.ui.RadarView;
-import com.sergiandreplace.appunta.ui.RadarView.OnPointPressedListener;
 
 public class SensorsActivity extends Activity implements OnCompassChangedListener, OnSeekBarChangeListener, OnPointPressedListener {
 

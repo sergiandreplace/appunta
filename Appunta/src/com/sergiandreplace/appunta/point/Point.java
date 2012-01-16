@@ -15,7 +15,7 @@
 
  */
 
-package com.sergiandreplace.appunta;
+package com.sergiandreplace.appunta.point;
 /***
  * A single point representing a place, it contains information on where it's
  * located in space, in screen, it's id and name and the name of the renderer to

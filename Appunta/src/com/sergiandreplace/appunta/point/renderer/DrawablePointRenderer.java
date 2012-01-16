@@ -15,16 +15,17 @@
 
  */
 
-package com.sergiandreplace.appunta.pointdrawer;
+package com.sergiandreplace.appunta.point.renderer;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
-import com.sergiandreplace.appunta.Point;
+import com.sergiandreplace.appunta.point.Point;
 
 /***
  * This class is used to generate a PointRenderer using a drawable
@@ -58,15 +59,20 @@ public class DrawablePointRenderer implements PointRenderer {
 		
 
 			pText = new Paint(Paint.ANTI_ALIAS_FLAG);
-			pText.setColor(0xFFFFFF);
+			pText.setColor(Color.RED);
 			pText.setStyle(Paint.Style.FILL);
 			pText.setTextAlign(Paint.Align.LEFT);
 			pText.setTextSize(20);
+			pText.setTypeface(Typeface.SANS_SERIF);
 			
 		}
 		
 		canvas.drawBitmap(b, point.getX()-xOff, point.getY()- yOff, null);
-		canvas.drawText("HOOOLA", point.getX()+xOff, point.getY()-yOff, pText);
+		//canvas.drawCircle(point.getX(), point.getY(), 10, pText);
+		pText.setColor(Color.WHITE);
+		pText.setStyle(Paint.Style.STROKE);
+		canvas.drawText(point.getName(), point.getX() + xOff,point.getY()+8, pText);
+		
 	}
 
 }
