@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" android:background="@drawable/bkg"/>
+            android:layout_alignParentTop="true"/>
     </RelativeLayout>
 
     <com.sergiandreplace.appunta.ui.RadarView

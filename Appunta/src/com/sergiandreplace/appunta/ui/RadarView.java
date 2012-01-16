@@ -28,14 +28,12 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 
 import com.sergiandreplace.appunta.point.Point;
-import com.sergiandreplace.appunta.point.renderer.PointRenderer;
-import com.sergiandreplace.appunta.point.renderer.SimplePointRenderer;
 
 public class RadarView extends AppuntaView {
 
 	private int rotableBackground = 0;
-	private int size;
-	private int center;
+	private float center;
+
 
 	public RadarView(Context context) {
 		super(context);
@@ -62,58 +60,44 @@ public class RadarView extends AppuntaView {
 		int measuredHeight = getDefaultSize(getSuggestedMinimumHeight(),
 				heightMeasureSpec);
 
-		size = Math.max(measuredWidth, measuredHeight);
-		center = size / 2;
+		int size = Math.max(measuredWidth, measuredHeight);
+		center = getWidth()/2;
 		setMeasuredDimension(size, size);
 	}
 
 	@Override
-	protected void onDraw(Canvas canvas) {
-		// TODO Auto-generated method stub
-		super.onDraw(canvas);
-
-		if (getShownPoints() != null) {
-			double azRadians = Math.toRadians(getAzimuth());
-			drawBackground(canvas, -getAzimuth());
-
-			Paint pointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-			pointPaint.setColor(Color.GREEN);
-			SimplePointRenderer simplePoint = new SimplePointRenderer();
-
-			for (Point point : getShownPoints()) {
-
-				double pointAngle = getAngle(point) + azRadians;
-				double pixelDistance = point.getDistance() * center
-						/ getMaxDistance();
-				double pointy = center - pixelDistance * Math.sin(pointAngle);
-				double pointx = center + pixelDistance * Math.cos(pointAngle);
-				point.setX((float) pointx);
-				point.setY((float) pointy);
-
-				if (point.getRendererName() != null
-						&& getRenderers().containsKey(point.getRendererName())) {
-					PointRenderer renderer = getRenderers().get(point
-							.getRendererName());
-					renderer.drawPoint(point, canvas, getAzimuth());
-				} else {
-					simplePoint.drawPoint(point, canvas, getAzimuth());
-				}
-
-			}
-			pointPaint.setColor(Color.RED);
-			canvas.drawCircle(center, center, 10, pointPaint);
-		}
+	protected void setPointCoordinates(Point point) {
+		
+		double pointAngle = getAngle(point) + getAzimuthRadians();
+		double pixelDistance = point.getDistance() * center
+				/ getMaxDistance();
+		double pointy = center - pixelDistance * Math.sin(pointAngle);
+		double pointx = center+ pixelDistance * Math.cos(pointAngle);
+		point.setX((float) pointx);
+		point.setY((float) pointy);
 	}
-
+	
+	@Override
+	protected void preRender(Canvas canvas) {
+		drawBackground(canvas, -getAzimuth());	
+	}
+	
+	@Override
+	protected void postRender(Canvas canvas) {
+		Paint pointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		pointPaint.setColor(Color.GREEN);
+		pointPaint.setColor(Color.RED);
+		canvas.drawCircle(center, center, 10, pointPaint);
+	
+	}
 	private void drawBackground(Canvas canvas, double azimuth) {
 		if (rotableBackground != 0) {
 			Bitmap bg = BitmapFactory.decodeResource(this.getResources(),
 					rotableBackground);
-
 			Matrix transform = new Matrix();
 			transform.setRectToRect(
 					new RectF(0, 0, bg.getWidth(), bg.getHeight()), new RectF(
-							0, 0, size, size), Matrix.ScaleToFit.CENTER);
+							0, 0, getWidth(), getWidth()), Matrix.ScaleToFit.CENTER);
 			transform.preRotate((float) azimuth, bg.getWidth() / 2,
 					bg.getHeight() / 2);
 			canvas.drawBitmap(bg, transform, null);

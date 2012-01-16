@@ -49,28 +49,30 @@ public class DrawablePointRenderer implements PointRenderer {
 		this.id=id;
 		this.res=res;	
 	}
-	
+	/***
+	 * This methods paints the drawable received in constructor and writes the point name beside it
+	 */
 	@Override
 	public void drawPoint(Point point, Canvas canvas, float azimuth) {
 		if (b==null) {
+			
+			//Initialize drawing objects
+			
 			b=BitmapFactory.decodeResource(res, id);
 			xOff = b.getWidth()/2;
 			yOff = b.getHeight()/2;
 		
 
 			pText = new Paint(Paint.ANTI_ALIAS_FLAG);
-			pText.setColor(Color.RED);
 			pText.setStyle(Paint.Style.FILL);
 			pText.setTextAlign(Paint.Align.LEFT);
 			pText.setTextSize(20);
 			pText.setTypeface(Typeface.SANS_SERIF);
-			
+			pText.setColor(Color.WHITE);
+				
 		}
 		
 		canvas.drawBitmap(b, point.getX()-xOff, point.getY()- yOff, null);
-		//canvas.drawCircle(point.getX(), point.getY(), 10, pText);
-		pText.setColor(Color.WHITE);
-		pText.setStyle(Paint.Style.STROKE);
 		canvas.drawText(point.getName(), point.getX() + xOff,point.getY()+8, pText);
 		
 	}

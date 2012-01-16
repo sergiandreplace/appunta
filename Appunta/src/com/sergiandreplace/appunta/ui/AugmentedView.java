@@ -19,13 +19,9 @@ package com.sergiandreplace.appunta.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 
 import com.sergiandreplace.appunta.point.Point;
-import com.sergiandreplace.appunta.point.renderer.PointRenderer;
-import com.sergiandreplace.appunta.point.renderer.SimplePointRenderer;
 
 public class AugmentedView extends AppuntaView {
 
@@ -44,40 +40,28 @@ public class AugmentedView extends AppuntaView {
 		super(context, attrs, defStyle);
 	}
 
+		
 	@Override
-	protected void onDraw(Canvas canvas) {
+	protected void preRender(Canvas canvas) {
 		// TODO Auto-generated method stub
-		super.onDraw(canvas);
-
-		if (getShownPoints() != null) {
-			double azRadians = Math.toRadians(getAzimuth());
-
-			Paint pointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-			pointPaint.setColor(Color.GREEN);
-			SimplePointRenderer simplePoint = new SimplePointRenderer();
-
-			for (Point point : getShownPoints()) {
-
-				double angularDistance = angleDifference(azRadians, MAX_DEGREES
-						/ 4 - getAngle(point));
-				// double angularDistance= getAngle(point);
-				point.setX((float) ((angularDistance + VISIBLE_DEGREES / 2)
-						* getWidth() / VISIBLE_DEGREES));
-				point.setY(getHeight() / 2);
-				if (point.getRendererName() != null
-						&& getRenderers().containsKey(point.getRendererName())) {
-					PointRenderer renderer = getRenderers().get(
-							point.getRendererName());
-					renderer.drawPoint(point, canvas, getAzimuth());
-				} else {
-					simplePoint.drawPoint(point, canvas, getAzimuth());
-				}
-
-			}
-			pointPaint.setColor(Color.RED);
-		}
+		
 	}
 
+	@Override
+	protected void setPointCoordinates(Point point) {
+		double angularDistance = angleDifference(getAzimuthRadians(), MAX_DEGREES
+				/ 4 - getAngle(point));
+		// double angularDistance= getAngle(point);
+		point.setX((float) ((angularDistance + VISIBLE_DEGREES / 2) * getWidth() / VISIBLE_DEGREES));
+		point.setY((float) (getHeight()-getHeight() * point.getDistance()/ getMaxDistance()));
+	
+	}
+	
+	@Override
+	protected void postRender(Canvas canvas) {
+		// TODO Auto-generated method stub
+		
+	}
 	private double angleDifference(double centered, double moved) {
 		double cwDiff = cwDifference(centered, moved);
 		double ccwDiff = ccwDiference(centered, moved);
