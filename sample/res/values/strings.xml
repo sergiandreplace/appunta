@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Appunta</string>
+    <string name="slogan">AR easy</string>
+    <string name="radar">"Radar "</string>
+    <string name="ra">Augmented\nReality</string>
+
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>    
+    <color name="Title">#ccc</color>
+    <color name="Shadow">#555</color>
+    <color name="Text">#222</color>
+    </resources>
