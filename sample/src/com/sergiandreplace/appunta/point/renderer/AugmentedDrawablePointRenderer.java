@@ -37,10 +37,10 @@ public class AugmentedDrawablePointRenderer implements PointRenderer {
 	private Bitmap b=null;
 	private Resources res;
 	private int id;
-	private int xOff;
-	private int yOff;
 	private Paint pText;
 	private Paint pBlackLine;
+	
+	private Paint pCircle;
 	/***
 	 * Creates and object able to draw a drawable resource in a Canvas
 	 * @param res A resources object in order to retrieve the drawable
@@ -60,35 +60,33 @@ public class AugmentedDrawablePointRenderer implements PointRenderer {
 			//Initialize drawing objects
 			
 			b=BitmapFactory.decodeResource(res, id);
-			xOff = b.getWidth()/2;
-			yOff = b.getHeight()/2;
 		
 
 			pText = new Paint(Paint.ANTI_ALIAS_FLAG);
-			pText.setStyle(Paint.Style.FILL_AND_STROKE);
-			pText.setTextAlign(Paint.Align.LEFT);
+			pText.setStyle(Paint.Style.STROKE);
+			pText.setTextAlign(Paint.Align.CENTER);
 			pText.setTextSize(20);
 			pText.setTypeface(Typeface.SANS_SERIF);
 			pText.setColor(Color.WHITE);
+			
+			pCircle = new Paint(Paint.ANTI_ALIAS_FLAG);
+			pCircle.setStyle(Paint.Style.STROKE);
+			pCircle.setStrokeWidth(4);
+			pCircle.setColor(Color.WHITE);
 			
 			pBlackLine=new Paint(Paint.ANTI_ALIAS_FLAG);
 			pBlackLine.setColor(Color.BLACK);
 			pBlackLine.setTextSize(20);
 			pBlackLine.setTypeface(Typeface.SANS_SERIF);
-			pBlackLine.setTextAlign(Paint.Align.LEFT);
-				
-		}
-		canvas.drawLine(point.getX(), point.getY(), point.getX(), canvas.getHeight(), pText);
-		canvas.drawLine(point.getX()+1, point.getY(), point.getX()+1, canvas.getHeight(), pText);
-		canvas.drawLine(point.getX()-1, point.getY(), point.getX()-1, canvas.getHeight(), pText);
-		canvas.drawLine(point.getX()+2, point.getY(), point.getX()+2, canvas.getHeight(), pBlackLine);
-		canvas.drawLine(point.getX()-2, point.getY(), point.getX()-2, canvas.getHeight(), pBlackLine);
-		canvas.drawLine(point.getX()+3, point.getY(), point.getX()+3, canvas.getHeight(), pBlackLine);
-		canvas.drawLine(point.getX()-3, point.getY(), point.getX()-3, canvas.getHeight(), pBlackLine);
+			pBlackLine.setTextAlign(Paint.Align.CENTER);
 		
-		canvas.drawBitmap(b, point.getX()-xOff, point.getY()- yOff, null);
-		canvas.drawText(point.getName(), point.getX()+2 + xOff,point.getY()+10, pBlackLine);
-		canvas.drawText(point.getName(), point.getX() + xOff,point.getY()+8, pText);
+		}
+	
+		float size=(float) (10+(1000-point.getDistance())/25);
+		canvas.drawCircle(point.getX(), point.getY(), (float) size, pCircle);
+		float textWidth=pText.breakText(point.getName(), true, 500, null)/2;
+		canvas.drawText(point.getName(), point.getX()-textWidth+2,point.getY()+size+16, pBlackLine);
+		canvas.drawText(point.getName(), point.getX()-textWidth ,point.getY()+size+14, pText);
 		
 	}
 

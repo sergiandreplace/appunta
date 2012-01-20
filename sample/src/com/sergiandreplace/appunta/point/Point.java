@@ -16,6 +16,9 @@
  */
 
 package com.sergiandreplace.appunta.point;
+
+import com.sergiandreplace.appunta.point.renderer.PointRenderer;
+
 /***
  * A single point representing a place, it contains information on where it's
  * located in space, in screen, it's id and name and the name of the renderer to
@@ -30,26 +33,26 @@ public class Point {
 	private float longitude;
 	private double distance;
 	private String name;
-	private String rendererName;
+	private PointRenderer renderer;
 	private float x;
 	private float y;
 	
-	public Point(int id, float latitude, float longitude, String rendererName, String name) {
+	public Point(int id, float latitude, float longitude, PointRenderer renderer, String name) {
 		super();
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.rendererName=rendererName;
+		this.renderer=renderer;
 		this.name=name;
 	}
-	public Point(int id, double latitude, double longitude, String rendererName, String name) {
-		this(id, (float) latitude, (float) longitude, rendererName, name);
+	public Point(int id, double latitude, double longitude, PointRenderer renderer, String name) {
+		this(id, (float) latitude, (float) longitude, renderer, name);
 			
 	}
-	public Point(int id, float latitude, float longitude, String rendererName) {
-		this(id,latitude,longitude,rendererName,"");
+	public Point(int id, float latitude, float longitude, PointRenderer renderer) {
+		this(id,latitude,longitude,renderer,"");
 	}
-	public Point(int id, double latitude, double longitude,  String rendererName) {
-		this(id, (float) latitude,(float) longitude,rendererName);
+	public Point(int id, double latitude, double longitude,  PointRenderer renderer) {
+		this(id, (float) latitude,(float) longitude,renderer);
 	}
 
 	public Point(int id, float latitude, float longitude) {
@@ -121,15 +124,15 @@ public class Point {
 	 * Gets the name of the renderer to use to draw this point
 	 * @return The renderer
 	 */
-	public String getRendererName() {
-		return rendererName;
+	public PointRenderer getRenderer() {
+		return renderer;
 	}
 	/***
 	 * To assign a renderer to the current point
-	 * @param rendererName
+	 * @param renderer
 	 */
-	public void setRendererName(String rendererName) {
-		this.rendererName = rendererName;
+	public void setRenderer(PointRenderer renderer) {
+		this.renderer = renderer;
 	}
 
 	/***

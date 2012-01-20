@@ -17,9 +17,6 @@
 
 package com.sergiandreplace.appunta.ui;
 
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -27,8 +24,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.sergiandreplace.appunta.point.Point;
-import com.sergiandreplace.appunta.point.PointsManager;
-import com.sergiandreplace.appunta.point.renderer.PointRenderer;
+import com.sergiandreplace.appunta.point.Points;
 import com.sergiandreplace.appunta.point.renderer.SimplePointRenderer;
 
 /***
@@ -62,11 +58,8 @@ public abstract class AppuntaView extends View {
 
 	private static final double DEFAULT_MAX_DISTANCE = 1000;
 
-	private static final double MAX_DISTANCE_TAP = 48;
 
 	private int rotableBackground = 0;
-	private SimplePointRenderer simpleRenderer;
-	private PointsManager pointsManager;
 	private float azimuth;
 	private double azimuthRadians;
 	private double longitude;
@@ -75,11 +68,19 @@ public abstract class AppuntaView extends View {
 	
 	private double maxDistance = DEFAULT_MAX_DISTANCE;
 
-	private HashMap<String, PointRenderer> renderers = new HashMap<String, PointRenderer>();
 
-	private List<Point> shownPoints;
+	private Points points;
 
 	private OnPointPressedListener onPointPressedListener;
+
+	private Double minorDistance;
+
+	private double distance;
+
+	private Point p;
+
+
+	private SimplePointRenderer simplePointRenderer;
 
 	public AppuntaView(Context context) {
 		super(context);
@@ -93,54 +94,37 @@ public abstract class AppuntaView extends View {
 		super(context, attrs, defStyle);
 	}
 
-	protected void extractSubPoints() {
-		setShownPoints(pointsManager.getNearPoints(latitude, longitude,
-				getMaxDistance()));
-
-	}
-
 	protected Point findNearestPoint(float x, float y) {
-		Point p = null;
-		Double minorDistance = (double) Math.max(this.getWidth(),
-				this.getHeight());
-		for (Point point : getShownPoints()) {
-			double distance = Math.sqrt(Math.pow((point.getX() - x), 2)
+		p = null;
+		minorDistance = (double) Math.max(this.getWidth(),this.getHeight());
+		for (Point point : getpoints()) {
+			distance = Math.sqrt(Math.pow((point.getX() - x), 2)
 					+ Math.pow((point.getY() - y), 2));
 			if (distance < minorDistance) {
 				minorDistance = distance;
 				p = point;
 			}
 		}
-		if (minorDistance <= MAX_DISTANCE_TAP) {
-			return p;
-		} else {
-			return null;
-		}
+		return p;
 	}
 
-	private PointRenderer obtainRenderer(Point point) {
-		PointRenderer renderer;
-		if (point.getRendererName() != null
-				& getRenderers().containsKey(point.getRendererName())) {
-			renderer = getRenderers().get(point.getRendererName());
-		} else {
-			if (simpleRenderer == null) {
-				simpleRenderer = new SimplePointRenderer();
-			}
-			renderer = new SimplePointRenderer();
-		}
-		return renderer;
-	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		preRender(canvas);
-		if (getShownPoints() != null) {
-			for (Point point : getShownPoints()) {
+		if (getpoints() != null) {
+			for (Point point : getpoints()) {
 				calculatePointCoordinates(point);
-				PointRenderer renderer = obtainRenderer(point);
-				renderer.drawPoint(point, canvas, getAzimuth());
+				if (point.getRenderer()!=null){
+					point.getRenderer().drawPoint(point, canvas, getAzimuth());
+					
+				}else{
+					if (simplePointRenderer==null) {
+						simplePointRenderer=new SimplePointRenderer();
+					}
+					simplePointRenderer.drawPoint(point,canvas,getAzimuth());
+				}
 			}
 		}
 		postRender(canvas);
@@ -173,9 +157,7 @@ public abstract class AppuntaView extends View {
 
 	protected abstract void postRender(Canvas canvas);
 
-	public void putRenderer(String name, PointRenderer renderer) {
-		getRenderers().put(name, renderer);
-	}
+	
 
 	protected double getAngle(Point point) {
 		return Math.atan2(point.getLatitude() - latitude, point.getLongitude()
@@ -210,16 +192,14 @@ public abstract class AppuntaView extends View {
 		return getAzimuth();
 	}
 
-	public HashMap<String, PointRenderer> getRenderers() {
-		return renderers;
-	}
+	
 
 	public int getRotableBackground() {
 		return rotableBackground;
 	}
 
-	protected List<Point> getShownPoints() {
-		return shownPoints;
+	protected Points getpoints() {
+		return points;
 	}
 
 	protected void setAzimuth(float azimuth) {
@@ -229,12 +209,10 @@ public abstract class AppuntaView extends View {
 
 	public void setLatitude(long latitude) {
 		this.latitude = latitude;
-		extractSubPoints();
 	}
 
 	public void setLongitude(long longitude) {
 		this.longitude = longitude;
-		extractSubPoints();
 	}
 
 	public void setMaxDistance(double maxDistance) {
@@ -253,30 +231,18 @@ public abstract class AppuntaView extends View {
 		this.invalidate();
 	}
 
-	public void setPoints(List<Point> points) {
-		if (pointsManager == null) {
-			pointsManager = new PointsManager(points);
-		} else {
-			this.pointsManager.setPoints(points);
-		}
+	public void setPoints(Points points) {
+			this.points=points;
 	}
 
 	public void setPosition(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
-		extractSubPoints();
-	}
-
-	public void setRenderers(HashMap<String, PointRenderer> renderers) {
-		this.renderers = renderers;
+		points.calculateDistance(latitude, longitude);
 	}
 
 	public void setRotableBackground(int rotableBackground) {
 		this.rotableBackground = rotableBackground;
-	}
-
-	protected void setShownPoints(List<Point> shownPoints) {
-		this.shownPoints = shownPoints;
 	}
 
 

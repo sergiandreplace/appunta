@@ -1,7 +1,5 @@
 package com.sergiandreplace.appunta.sample;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.FrameLayout;
@@ -11,7 +9,9 @@ import android.widget.Toast;
 import com.sergiandreplace.appunta.CompassManager;
 import com.sergiandreplace.appunta.CompassManager.OnCompassChangedListener;
 import com.sergiandreplace.appunta.point.Point;
+import com.sergiandreplace.appunta.point.Points;
 import com.sergiandreplace.appunta.point.renderer.AugmentedDrawablePointRenderer;
+import com.sergiandreplace.appunta.point.renderer.PointRenderer;
 import com.sergiandreplace.appunta.ui.AppuntaView.OnPointPressedListener;
 import com.sergiandreplace.appunta.ui.CameraView;
 import com.sergiandreplace.appunta.ui.PanoramaView;
@@ -20,7 +20,6 @@ import com.sergiandreplace.appunta.ui.RadarView;
 public class AugmentedRealityActivity extends Activity implements OnCompassChangedListener, OnPointPressedListener {
 
 	TextView textviewAzimuth, textviewPitch, textviewRoll;
-	private float lastAzimuth = 0;
 	private PanoramaView ar;
 	private RadarView cv;
 	private CameraView camera;
@@ -38,16 +37,15 @@ public class AugmentedRealityActivity extends Activity implements OnCompassChang
 		ar = (PanoramaView) findViewById(R.id.augmentedView1);
         cv = (RadarView) findViewById(R.id.radarView1);
 
-        ar.putRenderer("drawable", new AugmentedDrawablePointRenderer(this.getResources(),
-                        R.drawable.marker));
         ar.setOnPointPressedListener(this);
         cv.setOnPointPressedListener(this);
 
+		PointRenderer arRenderer=new AugmentedDrawablePointRenderer(this.getResources(),
+                R.drawable.city);
 		
 		
-		
-		List<Point> points=PointsModel.getPoints("drawable");
-		List<Point> cpoints=PointsModel.getPoints(null);
+		Points points=PointsModel.getPoints(arRenderer);
+		Points cpoints=PointsModel.getPoints(null);
 		
 		ar.setPoints(points);
 		ar.setPosition(41.3825, 2.176944);//BCN
@@ -63,15 +61,7 @@ public class AugmentedRealityActivity extends Activity implements OnCompassChang
 	}
 	@Override
 	public void onCompassChanged(float azimuth) {
-		if (Math.abs(lastAzimuth-azimuth)>2) {
-			if (azimuth>lastAzimuth) {
-				lastAzimuth+=2;
-			}else{
-				lastAzimuth-=2;
-			}
-		}else{
-			lastAzimuth=azimuth;
-		}
+
 		ar.setOrientation(azimuth);
 		cv.setOrientation(azimuth);
 		

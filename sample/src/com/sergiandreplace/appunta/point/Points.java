@@ -27,33 +27,8 @@ import com.sergiandreplace.appunta.util.GeoUtils;
  * @author Sergi Martínez
  *
  */
-public  class PointsManager {
-
-	private List<Point> pointss;
-	
-	/***
-	 * Constructor assigning a list of points
-	 * @param points
-	 */
-	public PointsManager(List<Point> points) {
-		this.setPoints(points);
-	}
-
-	/***
-	 * Returns the list of points stored in the Manager
-	 * @return The list of points
-	 */
-	public List<Point> getPoints() {
-		return pointss;
-	}
-
-	/***
-	 * Stores another set of points
-	 * @param points The list of points
-	 */
-	public void setPoints(List<Point> points) {
-		this.pointss = points;
-	}
+@SuppressWarnings("serial")
+public  class Points extends ArrayList<Point>{
 
 	/***
 	 * Calculate the distance from a given point to all the points stored and sets
@@ -62,7 +37,7 @@ public  class PointsManager {
 	 * @param longitude Longitude of the given point
 	 */
 	public void calculateDistance(double latitude, double longitude) {
-		for (Point poi:pointss) {
+		for (Point poi:this) {
 			poi.setDistance(GeoUtils.distanceKm(latitude, longitude, poi.getLatitude(), poi.getLongitude()));
 		}
 	}
@@ -77,7 +52,7 @@ public  class PointsManager {
 	public List<Point> getNearPoints(double latitude, double longitude, double distance) {
 		calculateDistance(latitude,longitude);
 		List<Point> subPoints=new ArrayList<Point>();
-		for (Point poi:pointss) {
+		for (Point poi:this) {
 			if (poi.getDistance()<=distance) {
 				subPoints.add(poi);
 			}
