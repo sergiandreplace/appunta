@@ -59,8 +59,9 @@ public abstract class AppuntaView extends View {
 	private static final double DEFAULT_MAX_DISTANCE = 1000;
 
 
-	private int rotableBackground = 0;
 	private float azimuth;
+	private float orientation;
+	private double orientationRadians;
 	private double azimuthRadians;
 	private double longitude;
 	private double latitude;
@@ -117,13 +118,13 @@ public abstract class AppuntaView extends View {
 			for (Point point : getpoints()) {
 				calculatePointCoordinates(point);
 				if (point.getRenderer()!=null){
-					point.getRenderer().drawPoint(point, canvas, getAzimuth());
+					point.getRenderer().drawPoint(point, canvas, getOrientation());
 					
 				}else{
 					if (simplePointRenderer==null) {
 						simplePointRenderer=new SimplePointRenderer();
 					}
-					simplePointRenderer.drawPoint(point,canvas,getAzimuth());
+					simplePointRenderer.drawPoint(point,canvas,getOrientation());
 				}
 			}
 		}
@@ -189,22 +190,25 @@ public abstract class AppuntaView extends View {
 	}
 
 	public float getOrientation() {
-		return getAzimuth();
+		return orientation;
 	}
 
-	
-
-	public int getRotableBackground() {
-		return rotableBackground;
+	public double getOrientationRadians() {
+		return orientationRadians;
 	}
+
 
 	protected Points getpoints() {
 		return points;
 	}
 
-	protected void setAzimuth(float azimuth) {
+	public void setAzimuth(float azimuth) {
 		this.azimuth = azimuth;
 		this.azimuthRadians = Math.toRadians(azimuth);
+		this.orientation=(azimuth+90) % 360;
+		this.orientationRadians=Math.toRadians(orientation);
+		this.invalidate();
+
 	}
 
 	public void setLatitude(long latitude) {
@@ -226,8 +230,13 @@ public abstract class AppuntaView extends View {
 		this.onPointPressedListener = onPointPressedListener;
 	}
 
-	public void setOrientation(float azimuth) {
-		this.setAzimuth(azimuth);
+	public void setOrientation(float orientation) {
+		this.orientation=orientation;
+		this.orientationRadians=Math.toRadians(orientation);
+		
+		this.azimuth=(orientation-90) % 360;
+		this.azimuthRadians=Math.toRadians(azimuth);
+		
 		this.invalidate();
 	}
 
@@ -241,9 +250,6 @@ public abstract class AppuntaView extends View {
 		points.calculateDistance(latitude, longitude);
 	}
 
-	public void setRotableBackground(int rotableBackground) {
-		this.rotableBackground = rotableBackground;
-	}
 
 
 

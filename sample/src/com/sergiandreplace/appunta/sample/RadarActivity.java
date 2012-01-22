@@ -42,7 +42,7 @@ public class RadarActivity extends Activity implements OnCompassChangedListener,
 	}
 	@Override
 	public void onCompassChanged(float azimuth) {
-		radar.setOrientation(azimuth);
+		radar.setAzimuth(azimuth);
 		
 	}
 

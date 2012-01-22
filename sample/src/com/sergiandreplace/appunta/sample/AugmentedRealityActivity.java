@@ -62,8 +62,8 @@ public class AugmentedRealityActivity extends Activity implements OnCompassChang
 	@Override
 	public void onCompassChanged(float azimuth) {
 
-		ar.setOrientation(azimuth);
-		cv.setOrientation(azimuth);
+		ar.setAzimuth(azimuth);
+		cv.setAzimuth(azimuth);
 		
 		
 	}
