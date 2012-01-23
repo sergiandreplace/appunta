@@ -17,6 +17,7 @@
 
 package com.sergiandreplace.appunta.point;
 
+import com.sergiandreplace.appunta.location.Location;
 import com.sergiandreplace.appunta.point.renderer.PointRenderer;
 
 /***
@@ -28,70 +29,34 @@ import com.sergiandreplace.appunta.point.renderer.PointRenderer;
  *
  */
 public class Point {
+	private static int EARTH_RADIUS_KM = 6371;
+
+	public static int MILLION = 1000000;
+
+	
 	private int id;
-	private float latitude;
-	private float longitude;
+	private Location location;
 	private double distance;
 	private String name;
 	private PointRenderer renderer;
 	private float x;
 	private float y;
 	
-	public Point(int id, float latitude, float longitude, PointRenderer renderer, String name) {
+	public Point(int id, Location location, PointRenderer renderer, String name) {
 		super();
-		this.latitude = latitude;
-		this.longitude = longitude;
+		this.setLocation(location);
 		this.renderer=renderer;
 		this.name=name;
 	}
-	public Point(int id, double latitude, double longitude, PointRenderer renderer, String name) {
-		this(id, (float) latitude, (float) longitude, renderer, name);
-			
-	}
-	public Point(int id, float latitude, float longitude, PointRenderer renderer) {
-		this(id,latitude,longitude,renderer,"");
-	}
-	public Point(int id, double latitude, double longitude,  PointRenderer renderer) {
-		this(id, (float) latitude,(float) longitude,renderer);
+	public Point(int id, Location location, PointRenderer renderer) {
+		this(id,location,renderer,"");
 	}
 
-	public Point(int id, float latitude, float longitude) {
-		this(id,latitude,longitude,null);
+	public Point(int id, Location location) {
+		this(id,location,null);
 	}
 	
-	public Point(int id, double latitude, double longitude) {
-		this(id, (float) latitude,(float) longitude,null);
-	}
 	
-	/***
-	 * Latitude of the point
-	 * @return The current position of the point in decimal degrees
-	 */
-	public float getLatitude() {
-		return latitude;
-	}
-	
-	/***
-	 * Latitude setter
-	 * @param latitude The current position of the point in decimal degrees
-	 */
-	public void setLatitude(float latitude) {
-		this.latitude = latitude;
-	}
-	/***
-	 * Longitude of the point
-	 * @return The current position of the point in decimal degrees
-	 */
-	public float getLongitude() {
-		return longitude;
-	}
-	/***
-	 * Longitude setter
-	 * @param latitude The current position of the point in decimal degrees
-	 */
-	public void setLongitude(float longitude) {
-		this.longitude = longitude;
-	}
 	/***
 	 * Distance to a point
 	 * @return the distance in Km if previously set
@@ -171,6 +136,31 @@ public class Point {
 	public void setY(float y) {
 		this.y = y;
 	}
-	
+	public Location getLocation() {
+		return location;
+	}
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+	/**
+	 * Computes the distance in kilometers between two points on Earth.
+	 * 
+	 * @param location1
+	 *            Latitude and longitude of the first point
+	 * @param location2
+	 *            Latitude and longitude of the second point
+	 * @return Distance between the two points in kilometers.
+	 */
+	public  double distanceKm(Location otherLocation) {
+		double lat1Rad = Math.toRadians(otherLocation.getLatitude());
+		double lat2Rad = Math.toRadians(location.getLatitude());
+		double deltaLonRad = Math.toRadians(location.getLongitude()
+				- otherLocation.getLongitude());
+
+		return Math
+				.acos(Math.sin(lat1Rad) * Math.sin(lat2Rad) + Math.cos(lat1Rad)
+						* Math.cos(lat2Rad) * Math.cos(deltaLonRad))
+				* EARTH_RADIUS_KM;
+	}	
 	
 }

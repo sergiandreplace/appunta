@@ -6,8 +6,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sergiandreplace.appunta.CompassManager;
-import com.sergiandreplace.appunta.CompassManager.OnCompassChangedListener;
+import com.sergiandreplace.appunta.location.Location;
+import com.sergiandreplace.appunta.orientation.Orientation;
+import com.sergiandreplace.appunta.orientation.OrientationManager;
+import com.sergiandreplace.appunta.orientation.OrientationManager.OnOrientationChangedListener;
 import com.sergiandreplace.appunta.point.Point;
 import com.sergiandreplace.appunta.point.Points;
 import com.sergiandreplace.appunta.point.renderer.AugmentedDrawablePointRenderer;
@@ -17,7 +19,7 @@ import com.sergiandreplace.appunta.ui.CameraView;
 import com.sergiandreplace.appunta.ui.PanoramaView;
 import com.sergiandreplace.appunta.ui.RadarView;
 
-public class AugmentedRealityActivity extends Activity implements OnCompassChangedListener, OnPointPressedListener {
+public class AugmentedRealityActivity extends Activity implements OnOrientationChangedListener, OnPointPressedListener {
 
 	TextView textviewAzimuth, textviewPitch, textviewRoll;
 	private PanoramaView ar;
@@ -31,8 +33,8 @@ public class AugmentedRealityActivity extends Activity implements OnCompassChang
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ar);
-		CompassManager compass = new CompassManager(this);
-		compass.setOnCompassChangeListener(this);
+		OrientationManager compass = new OrientationManager(this);
+		compass.setOnOrientationChangeListener(this);
 		
 		ar = (PanoramaView) findViewById(R.id.augmentedView1);
         cv = (RadarView) findViewById(R.id.radarView1);
@@ -48,10 +50,10 @@ public class AugmentedRealityActivity extends Activity implements OnCompassChang
 		Points cpoints=PointsModel.getPoints(null);
 		
 		ar.setPoints(points);
-		ar.setPosition(41.3825, 2.176944);//BCN
+		ar.setPosition(new Location(41.3825, 2.176944));//BCN
 		ar.setOnPointPressedListener(this);
 		cv.setPoints(cpoints);
-		cv.setPosition(41.3825, 2.176944);//BCN
+		cv.setPosition(new Location(41.3825, 2.176944));//BCN
 		cv.setRotableBackground(R.drawable.arrow);
 		
 		cameraFrame=(FrameLayout) findViewById(R.id.cameraFrame);
@@ -60,10 +62,10 @@ public class AugmentedRealityActivity extends Activity implements OnCompassChang
 		
 	}
 	@Override
-	public void onCompassChanged(float azimuth) {
+	public void onOrientationChanged(Orientation orientation) {
 
-		ar.setAzimuth(azimuth);
-		cv.setAzimuth(azimuth);
+		ar.setOrientation(orientation);
+		cv.setOrientation(orientation);
 		
 		
 	}

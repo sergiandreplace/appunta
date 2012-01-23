@@ -19,6 +19,7 @@ package com.sergiandreplace.appunta.point.renderer;
 
 import android.graphics.Canvas;
 
+import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.point.Point;
 
 /***
@@ -34,5 +35,5 @@ public interface PointRenderer {
 	 * @param canvas The canvas where to draw
 	 * @param azimuth The current azimuth
 	 */
-	public void drawPoint(Point point, Canvas canvas, float azimuth);
+	public void drawPoint(Point point, Canvas canvas, Orientation orientation);
 }

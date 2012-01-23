@@ -7,15 +7,17 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sergiandreplace.appunta.CompassManager;
-import com.sergiandreplace.appunta.CompassManager.OnCompassChangedListener;
+import com.sergiandreplace.appunta.location.Location;
+import com.sergiandreplace.appunta.orientation.Orientation;
+import com.sergiandreplace.appunta.orientation.OrientationManager;
+import com.sergiandreplace.appunta.orientation.OrientationManager.OnOrientationChangedListener;
 import com.sergiandreplace.appunta.point.Point;
 import com.sergiandreplace.appunta.point.Points;
 import com.sergiandreplace.appunta.point.renderer.DrawablePointRenderer;
 import com.sergiandreplace.appunta.ui.AppuntaView.OnPointPressedListener;
 import com.sergiandreplace.appunta.ui.RadarView;
 
-public class RadarActivity extends Activity implements OnCompassChangedListener, OnPointPressedListener, OnSeekBarChangeListener {
+public class RadarActivity extends Activity implements OnOrientationChangedListener, OnPointPressedListener, OnSeekBarChangeListener {
 
 	TextView textviewAzimuth, textviewPitch, textviewRoll;
 	private RadarView radar;
@@ -26,8 +28,8 @@ public class RadarActivity extends Activity implements OnCompassChangedListener,
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.radar);
-		CompassManager compass = new CompassManager(this);
-		compass.setOnCompassChangeListener(this);
+		OrientationManager compass = new OrientationManager(this);
+		compass.setOnOrientationChangeListener(this);
 		radar = (RadarView) findViewById(R.id.radarView1);
 		radar.setOnPointPressedListener(this);
 		
@@ -35,14 +37,14 @@ public class RadarActivity extends Activity implements OnCompassChangedListener,
 		Points points=PointsModel.getPoints(renderer);
 		
 		radar.setPoints(points);
-		radar.setPosition(41.3825, 2.176944);//BCN
+		radar.setPosition(new Location(41.3825, 2.176944));//BCN
 		radar.setRotableBackground(R.drawable.arrow);
 		
 		((SeekBar)findViewById(R.id.seekBar1)).setOnSeekBarChangeListener(this);
 	}
 	@Override
-	public void onCompassChanged(float azimuth) {
-		radar.setAzimuth(azimuth);
+	public void onOrientationChanged(Orientation orientation) {
+		radar.setOrientation(orientation);
 		
 	}
 

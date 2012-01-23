@@ -15,9 +15,10 @@
 
  */
 
-package com.sergiandreplace.appunta;
+package com.sergiandreplace.appunta.orientation;
 
 import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -32,17 +33,13 @@ import android.hardware.SensorManager;
  * @author Sergi Martínez
  * 
  */
-public class CompassManager implements SensorEventListener {
+public class OrientationManager implements SensorEventListener {
 
 	private SensorManager sensorManager;
-	private float azimuth;
-	private float pitch;
-	private float roll;
+	private Orientation orientation = new Orientation();
 	private List<Sensor> sensors;
 	private boolean sensorRunning = false;
-	private OnCompassChangedListener onCompassChangeListener;
-	private OnPitchChangedListener onPitchChangedListener;
-	private OnRollChangedListener onRollChangedListener;
+	private OnOrientationChangedListener onOrientationChangeListener;
 
 	/***
 	 * This constructor will generate and start a Compass Manager
@@ -50,7 +47,7 @@ public class CompassManager implements SensorEventListener {
 	 * @param activity
 	 *            The activity where the service will work
 	 */
-	public CompassManager(Activity activity) {
+	public OrientationManager(Activity activity) {
 		startSensor(activity);
 	}
 
@@ -58,7 +55,7 @@ public class CompassManager implements SensorEventListener {
 	 * This constructor will generate a Compass Manager, but it will need to be
 	 * started manually using {@link #startSensor}
 	 */
-	public CompassManager() {
+	public OrientationManager() {
 
 	}
 
@@ -80,40 +77,29 @@ public class CompassManager implements SensorEventListener {
 			}
 		}
 	}
+
 	/***
 	 * Detects a change in a sensor and warns the appropiate listener.
 	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// Check azimuth (N - S - W - E)
-		if (this.azimuth != event.values[0]) {
-			this.azimuth = event.values[0];
-			if (getOnCompassChangeListener() != null) {
-				getOnCompassChangeListener().onCompassChanged(azimuth);
-			}
+		orientation.setAzimuth(event.values[0]);
+		orientation.setPitch(event.values[1]);
+		orientation.setRoll(event.values[2]);
+
+		if (getOnCompassChangeListener() != null) {
+			getOnCompassChangeListener().onOrientationChanged(orientation);
 		}
 		// Check pitch - phone flat or standing up
-		if (this.pitch != event.values[1]) {
-			this.pitch = event.values[1];
-			if (getOnPitchChangedListener() != null) {
-				getOnPitchChangedListener().onPitchChanged(roll);
-			}
-		}
-		// Check roll - driving wheel movement
-		if (this.roll != event.values[2]) {
-			this.roll = event.values[2];
-			if (getOnRollChangedListener() != null) {
-				getOnRollChangedListener().onRollChanged(roll);
-			}
-		}
+
 	}
 
-	
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		//Space for rent
+		// Space for rent
 	}
-	
+
 	/***
 	 * We stop "hearing" the sensors
 	 */
@@ -133,55 +119,33 @@ public class CompassManager implements SensorEventListener {
 	}
 
 	// Setters and getter for the three listeners (Bob, Moe and Curly)
-	
-	public OnCompassChangedListener getOnCompassChangeListener() {
-		return onCompassChangeListener;
+
+	public OnOrientationChangedListener getOnCompassChangeListener() {
+		return onOrientationChangeListener;
 	}
 
-	public void setOnCompassChangeListener(
-			OnCompassChangedListener onCompassChangeListener) {
-		this.onCompassChangeListener = onCompassChangeListener;
+	public void setOnOrientationChangeListener(
+			OnOrientationChangedListener onOrientationChangeListener) {
+		this.onOrientationChangeListener = onOrientationChangeListener;
 	}
 
-	public OnPitchChangedListener getOnPitchChangedListener() {
-		return onPitchChangedListener;
+	public Orientation getOrientation() {
+		return orientation;
 	}
 
-	public void setOnPitchChangedListener(OnPitchChangedListener onPitchChangedListener) {
-		this.onPitchChangedListener = onPitchChangedListener;
+	public void setOrientation(Orientation orientation) {
+		this.orientation = orientation;
 	}
 
-	public OnRollChangedListener getOnRollChangedListener() {
-		return onRollChangedListener;
-	}
-
-	public void setOnRollChangedListener(OnRollChangedListener onRollChangedListener) {
-		this.onRollChangedListener = onRollChangedListener;
-	}
-
-	
-	public interface OnCompassChangedListener {
+	public interface OnOrientationChangedListener {
 		/***
-		 * This method will be invoked when the magnetic orientation of the phone
-		 * changed
-		 * @param azimuth Orientation on degrees. 360-0 is north.
+		 * This method will be invoked when the magnetic orientation of the
+		 * phone changed
+		 * 
+		 * @param azimuth
+		 *            Orientation on degrees. 360-0 is north.
 		 */
-		public void onCompassChanged(float azimuth);
+		public void onOrientationChanged(Orientation orientation);
 	}
 
-	public interface OnPitchChangedListener {
-		/***
-		 * This method will be invoked when the pitch of the phone changes. 
-		 * @param pitch 0 standing up, 90 flat, 180 upside-down, etc
-		 */
-		public void onPitchChanged(float pitch);
-	}
-
-	public interface OnRollChangedListener {
-		/***
-		 * This method will be invoked when the roll of the phone changes. 
-		 * @param roll Changes when moving phone as a steering wheel
-		 */
-		public void onRollChanged(float roll);
-	}
 }

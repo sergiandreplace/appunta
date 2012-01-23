@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
+import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.point.Point;
 
 /***
@@ -53,7 +54,7 @@ public class DrawablePointRenderer implements PointRenderer {
 	 * This methods paints the drawable received in constructor and writes the point name beside it
 	 */
 	@Override
-	public void drawPoint(Point point, Canvas canvas, float azimuth) {
+	public void drawPoint(Point point, Canvas canvas, Orientation orientation) {
 		if (b==null) {
 			
 			//Initialize drawing objects

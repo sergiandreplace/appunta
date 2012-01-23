@@ -23,6 +23,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.sergiandreplace.appunta.location.Location;
+import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.point.Point;
 import com.sergiandreplace.appunta.point.Points;
 import com.sergiandreplace.appunta.point.renderer.SimplePointRenderer;
@@ -59,12 +61,8 @@ public abstract class AppuntaView extends View {
 	private static final double DEFAULT_MAX_DISTANCE = 1000;
 
 
-	private float azimuth;
-	private float orientation;
-	private double orientationRadians;
-	private double azimuthRadians;
-	private double longitude;
-	private double latitude;
+	private Orientation orientation;
+	private Location location;
 
 	
 	private double maxDistance = DEFAULT_MAX_DISTANCE;
@@ -113,18 +111,21 @@ public abstract class AppuntaView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+		if (getOrientation()==null) {
+			return;
+		}
 		preRender(canvas);
 		if (getpoints() != null) {
 			for (Point point : getpoints()) {
 				calculatePointCoordinates(point);
 				if (point.getRenderer()!=null){
-					point.getRenderer().drawPoint(point, canvas, getOrientation());
+					point.getRenderer().drawPoint(point, canvas, this.orientation);
 					
 				}else{
 					if (simplePointRenderer==null) {
 						simplePointRenderer=new SimplePointRenderer();
 					}
-					simplePointRenderer.drawPoint(point,canvas,getOrientation());
+					simplePointRenderer.drawPoint(point,canvas,this.orientation);
 				}
 			}
 		}
@@ -161,25 +162,15 @@ public abstract class AppuntaView extends View {
 	
 
 	protected double getAngle(Point point) {
-		return Math.atan2(point.getLatitude() - latitude, point.getLongitude()
-				- longitude);
+		return Math.atan2(point.getLocation().getLatitude() - location.getLatitude(),
+						  point.getLocation().getLongitude() - location.getLongitude());
 	}
 
-	protected float getAzimuth() {
-		return azimuth;
+
+	public Location getLocation() {
+		return location;
 	}
 
-	protected double getAzimuthRadians() {
-		return azimuthRadians;
-	}
-
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public double getLongitude() {
-		return longitude;
-	}
 
 	public double getMaxDistance() {
 		return maxDistance;
@@ -189,35 +180,28 @@ public abstract class AppuntaView extends View {
 		return onPointPressedListener;
 	}
 
-	public float getOrientation() {
-		return orientation;
-	}
-
-	public double getOrientationRadians() {
-		return orientationRadians;
-	}
 
 
 	protected Points getpoints() {
 		return points;
 	}
 
-	public void setAzimuth(float azimuth) {
-		this.azimuth = azimuth;
-		this.azimuthRadians = Math.toRadians(azimuth);
-		this.orientation=(azimuth+90) % 360;
-		this.orientationRadians=Math.toRadians(orientation);
+	public void setOrientation(Orientation orientation) {
+	
+		this.orientation=orientation;
 		this.invalidate();
 
 	}
-
-	public void setLatitude(long latitude) {
-		this.latitude = latitude;
+	
+	protected Orientation getOrientation() {
+		return this.orientation;
 	}
 
-	public void setLongitude(long longitude) {
-		this.longitude = longitude;
+	
+	public void setLocation(Location location) {
+		this.location=location;
 	}
+
 
 	public void setMaxDistance(double maxDistance) {
 		this.maxDistance = maxDistance;
@@ -230,27 +214,14 @@ public abstract class AppuntaView extends View {
 		this.onPointPressedListener = onPointPressedListener;
 	}
 
-	public void setOrientation(float orientation) {
-		this.orientation=orientation;
-		this.orientationRadians=Math.toRadians(orientation);
-		
-		this.azimuth=(orientation-90) % 360;
-		this.azimuthRadians=Math.toRadians(azimuth);
-		
-		this.invalidate();
+	public void setPosition(Location location) {
+		this.location=location;
+		points.calculateDistance(location);
 	}
 
 	public void setPoints(Points points) {
-			this.points=points;
-	}
-
-	public void setPosition(double latitude, double longitude) {
-		this.latitude = latitude;
-		this.longitude = longitude;
-		points.calculateDistance(latitude, longitude);
-	}
-
-
+		this.points=points;
+}
 
 
 }

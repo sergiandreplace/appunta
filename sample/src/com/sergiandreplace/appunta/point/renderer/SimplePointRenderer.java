@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.point.Point;
 
 /***
@@ -35,7 +36,7 @@ public class SimplePointRenderer implements PointRenderer {
 	 * Draws a small circle in the point coordinates
 	 */
 	@Override
-	public void drawPoint(Point point, Canvas canvas, float azimuth) {
+	public void drawPoint(Point point, Canvas canvas, Orientation orientation) {
 		if (b == null) {
 			Paint p=new Paint(Paint.ANTI_ALIAS_FLAG);
 			p.setColor(0x44FFFFFF);

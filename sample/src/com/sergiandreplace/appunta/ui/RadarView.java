@@ -32,6 +32,7 @@ public class RadarView extends AppuntaView {
 
 	private int rotableBackground = 0;
 	private float center;
+	private Bitmap rotableBacgkroundBitmap;
 
 	public RadarView(Context context) {
 		super(context);
@@ -64,7 +65,8 @@ public class RadarView extends AppuntaView {
 	@Override
 	protected void calculatePointCoordinates(Point point) {
 
-		double pointAngle = getAngle(point) + getOrientationRadians();
+		double pointAngle = getAngle(point)
+				+ getOrientation().getCompassRadians();
 		double pixelDistance = point.getDistance() * center / getMaxDistance();
 		double pointy = center - pixelDistance * Math.sin(pointAngle);
 		double pointx = center + pixelDistance * Math.cos(pointAngle);
@@ -86,17 +88,17 @@ public class RadarView extends AppuntaView {
 	}
 
 	private void drawBackground(Canvas canvas) {
-		if (getRotableBackground() != 0) {
-			Bitmap bg = BitmapFactory.decodeResource(this.getResources(),
-					getRotableBackground());
+		if (getRotableBackground() != 0 && getOrientation()!=null) {
+
 			Matrix transform = new Matrix();
 			transform.setRectToRect(
-					new RectF(0, 0, bg.getWidth(), bg.getHeight()), new RectF(
-							0, 0, getWidth(), getWidth()),
+					new RectF(0, 0, rotableBacgkroundBitmap.getWidth(),
+							rotableBacgkroundBitmap.getHeight()), 
+							new RectF(0, 0, getWidth(), getWidth()),
 					Matrix.ScaleToFit.CENTER);
-			transform.preRotate(-getOrientation(), bg.getWidth() / 2,
-					bg.getHeight() / 2);
-			canvas.drawBitmap(bg, transform, null);
+			transform.preRotate(-(getOrientation().getCompass()),
+					rotableBacgkroundBitmap.getWidth() / 2, rotableBacgkroundBitmap.getHeight() / 2);
+			canvas.drawBitmap(rotableBacgkroundBitmap, transform, null);
 		}
 	}
 
@@ -106,6 +108,8 @@ public class RadarView extends AppuntaView {
 
 	public void setRotableBackground(int rotableBackground) {
 		this.rotableBackground = rotableBackground;
+		rotableBacgkroundBitmap = BitmapFactory.decodeResource(
+				this.getResources(), rotableBackground);
 	}
 
 }
