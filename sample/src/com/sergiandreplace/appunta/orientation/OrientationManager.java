@@ -103,7 +103,7 @@ public class OrientationManager implements SensorEventListener {
 	/***
 	 * We stop "hearing" the sensors
 	 */
-	private void stopSensor() {
+	public void stopSensor() {
 		if (sensorRunning) {
 			sensorManager.unregisterListener(this);
 		}

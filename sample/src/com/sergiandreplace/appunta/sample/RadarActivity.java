@@ -21,6 +21,7 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 
 	TextView textviewAzimuth, textviewPitch, textviewRoll;
 	private RadarView radar;
+	private OrientationManager compass;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -28,7 +29,7 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.radar);
-		OrientationManager compass = new OrientationManager(this);
+		compass = new OrientationManager(this);
 		compass.setOnOrientationChangeListener(this);
 		radar = (RadarView) findViewById(R.id.radarView1);
 		radar.setOnPointPressedListener(this);
@@ -42,6 +43,18 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 		
 		((SeekBar)findViewById(R.id.seekBar1)).setOnSeekBarChangeListener(this);
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		compass.stopSensor();
+	}
+	@Override
+	protected void onResume() {
+		super.onPause();
+		compass.startSensor(this);
+	}
+	
 	@Override
 	public void onOrientationChanged(Orientation orientation) {
 		radar.setOrientation(orientation);

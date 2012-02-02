@@ -26,6 +26,7 @@ public class AugmentedRealityActivity extends Activity implements OnOrientationC
 	private RadarView cv;
 	private CameraView camera;
 	private FrameLayout cameraFrame;
+	private OrientationManager compass;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -33,7 +34,7 @@ public class AugmentedRealityActivity extends Activity implements OnOrientationC
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ar);
-		OrientationManager compass = new OrientationManager(this);
+		compass = new OrientationManager(this);
 		compass.setOnOrientationChangeListener(this);
 		
 		ar = (PanoramaView) findViewById(R.id.augmentedView1);
@@ -61,6 +62,17 @@ public class AugmentedRealityActivity extends Activity implements OnOrientationC
 		cameraFrame.addView(camera);
 		
 	}
+	@Override
+	protected void onPause() {
+		super.onPause();
+		compass.stopSensor();
+	}
+	@Override
+	protected void onResume() {
+		super.onPause();
+		compass.startSensor(this);
+	}
+	
 	@Override
 	public void onOrientationChanged(Orientation orientation) {
 
