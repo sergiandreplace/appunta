@@ -24,13 +24,12 @@
         </activity>
         <activity
             android:name="RadarActivity"
-            android:screenOrientation="landscape"
+            android:configChanges="orientation"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
             android:name="AugmentedRealityActivity"
             android:configChanges="orientation"
-            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
     </application>

@@ -1,7 +1,10 @@
 package com.sergiandreplace.appunta.sample;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -36,12 +39,18 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 		
 		DrawablePointRenderer renderer=new DrawablePointRenderer(this.getResources(), R.drawable.marker);
 		Points points=PointsModel.getPoints(renderer);
-		
+		radar.setDeviceOrientation(getDeviceOrientation());
 		radar.setPoints(points);
 		radar.setPosition(new Location(41.3825, 2.176944));//BCN
 		radar.setRotableBackground(R.drawable.arrow);
 		
 		((SeekBar)findViewById(R.id.seekBar1)).setOnSeekBarChangeListener(this);
+	}
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		radar.setDeviceOrientation(newConfig.orientation);
+
 	}
 	
 	@Override
@@ -51,7 +60,7 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 	}
 	@Override
 	protected void onResume() {
-		super.onPause();
+		super.onResume();
 		compass.startSensor(this);
 	}
 	
@@ -83,6 +92,11 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 	@Override
 	public void onPointPressed(Point p) {
 		Toast.makeText(this, p.getName(), Toast.LENGTH_SHORT).show();
+	}
+	
+	private int getDeviceOrientation() {
+		Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+		return display.getOrientation();
 	}
 }
 

@@ -18,6 +18,7 @@
 package com.sergiandreplace.appunta.ui;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -78,6 +79,7 @@ public abstract class AppuntaView extends View {
 
 	private Point p;
 
+	private int deviceOrientation=Configuration.ORIENTATION_LANDSCAPE;
 
 	private SimplePointRenderer simplePointRenderer;
 
@@ -166,6 +168,9 @@ public abstract class AppuntaView extends View {
 						  point.getLocation().getLongitude() - location.getLongitude());
 	}
 
+	protected double getVerticalAngle(Point point) {
+		return Math.atan2(point.getDistance(), location.getAltitude());
+	}
 
 	public Location getLocation() {
 		return location;
@@ -222,6 +227,14 @@ public abstract class AppuntaView extends View {
 	public void setPoints(Points points) {
 		this.points=points;
 }
+
+	public int getDeviceOrientation() {
+		return deviceOrientation;
+	}
+
+	public void setDeviceOrientation(int deviceOrientation) {
+		this.deviceOrientation = deviceOrientation;
+	}
 
 
 }

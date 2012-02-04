@@ -4,7 +4,7 @@ public class Location {
 
 	private float latitude;
 	private float longitude;
-
+	private float altitude;
 	public Location() {
 
 	}
@@ -14,9 +14,21 @@ public class Location {
 		this.longitude = longitude;
 	}
 
+	public Location(float latitude, float longitude, float altitude) {
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.altitude=altitude;
+	}
+
 	public Location(double latitude, double longitude) {
 		setLatitude(latitude);
 		setLongitude(longitude);
+	}
+
+	public Location(double latitude, double longitude, double altitude) {
+		setLatitude(latitude);
+		setLongitude(longitude);
+		setAltitude(altitude);
 	}
 
 	/***
@@ -77,6 +89,16 @@ public class Location {
 		this.longitude = (float) longitude;
 	}
 
+	public float getAltitude() {
+		return altitude;
+	}
+
+	public void setAltitude(float altitude) {
+		this.altitude = altitude;
+	}
+	public void setAltitude(double altitude) {
+		this.altitude=(float) altitude;
+	}
 	
 	
 }

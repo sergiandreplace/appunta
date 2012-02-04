@@ -50,7 +50,6 @@ public class CameraView extends SurfaceView implements Callback {
 			int height) {
 		Parameters params = camera.getParameters();
 		
-//		params.setPreviewSize(width, height);
 		params.setPictureFormat(PixelFormat.JPEG);
 		camera.setParameters(params);
 		camera.startPreview();

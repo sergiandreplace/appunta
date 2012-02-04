@@ -18,6 +18,7 @@
 package com.sergiandreplace.appunta.ui;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,7 +34,7 @@ public class RadarView extends AppuntaView {
 	private int rotableBackground = 0;
 	private float center;
 	private Bitmap rotableBacgkroundBitmap;
-
+	private double compassAngle=0;
 	public RadarView(Context context) {
 		super(context);
 	}
@@ -65,8 +66,7 @@ public class RadarView extends AppuntaView {
 	@Override
 	protected void calculatePointCoordinates(Point point) {
 
-		double pointAngle = getAngle(point)
-				+ getOrientation().getCompassRadians();
+		double pointAngle = getAngle(point) + compassAngle;
 		double pixelDistance = point.getDistance() * center / getMaxDistance();
 		double pointy = center - pixelDistance * Math.sin(pointAngle);
 		double pointx = center + pixelDistance * Math.cos(pointAngle);
@@ -77,6 +77,12 @@ public class RadarView extends AppuntaView {
 	@Override
 	protected void preRender(Canvas canvas) {
 		drawBackground(canvas);
+		compassAngle=getOrientation().getCompass();
+		if (getDeviceOrientation()==Configuration.ORIENTATION_PORTRAIT) { //IF ORIENTATION IS VERTICAL
+			compassAngle-=90;
+		}
+		compassAngle=Math.toRadians(compassAngle);
+
 	}
 
 	@Override
@@ -96,12 +102,13 @@ public class RadarView extends AppuntaView {
 							rotableBacgkroundBitmap.getHeight()), 
 							new RectF(0, 0, getWidth(), getWidth()),
 					Matrix.ScaleToFit.CENTER);
-			transform.preRotate(-(getOrientation().getCompass()),
+			transform.preRotate((float) -(Math.toDegrees(compassAngle)),
 					rotableBacgkroundBitmap.getWidth() / 2, rotableBacgkroundBitmap.getHeight() / 2);
 			canvas.drawBitmap(rotableBacgkroundBitmap, transform, null);
 		}
 	}
 
+	
 	public int getRotableBackground() {
 		return rotableBackground;
 	}

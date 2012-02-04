@@ -72,7 +72,7 @@ public class OrientationManager implements SensorEventListener {
 			sensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
 			if (sensors.size() > 0) {
 				sensorManager.registerListener(this, sensors.get(0),
-						SensorManager.SENSOR_DELAY_NORMAL);
+						SensorManager.SENSOR_DELAY_FASTEST);
 				sensorRunning = true;
 			}
 		}
@@ -106,6 +106,7 @@ public class OrientationManager implements SensorEventListener {
 	public void stopSensor() {
 		if (sensorRunning) {
 			sensorManager.unregisterListener(this);
+			sensorRunning=false;
 		}
 	}
 
