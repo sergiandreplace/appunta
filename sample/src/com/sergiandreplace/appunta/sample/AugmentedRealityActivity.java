@@ -38,9 +38,9 @@ public class AugmentedRealityActivity extends Activity implements
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ar);
-//		compass = new OrientationManager(this);
-//		compass.setOnOrientationChangeListener(this);
-//		compass.startSensor(this);
+		compass = new OrientationManager(this);
+		compass.setOnOrientationChangeListener(this);
+		compass.startSensor(this);
 		
 		ar = (EyeView) findViewById(R.id.augmentedView1);
 		cv = (RadarView) findViewById(R.id.radarView1);
@@ -53,9 +53,7 @@ public class AugmentedRealityActivity extends Activity implements
 
 		Points points = PointsModel.getPoints(arRenderer);
 		Points cpoints = PointsModel.getPoints(null);
-		ar.setDeviceOrientation(getDeviceOrientation());
-		cv.setDeviceOrientation(getDeviceOrientation());
-
+		
 		ar.setPoints(points);
 		ar.setPosition(new Location(41.3825, 2.176944));// BCN
 		ar.setOnPointPressedListener(this);
@@ -86,9 +84,7 @@ public class AugmentedRealityActivity extends Activity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		compass = new OrientationManager(this);
-		compass.setOnOrientationChangeListener(this);
-		compass.startSensor(this);
+
 	}
 
 	@Override
