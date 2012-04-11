@@ -34,6 +34,8 @@ public class AugmentedRealityActivity extends Activity implements
 	private OrientationManager compass;
 	private String sensorsOutputString;
 	private TextView sensorsOutputTextView;
+	private TextView axisOutputTextView;
+	private String axisOutputString;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -70,6 +72,8 @@ public class AugmentedRealityActivity extends Activity implements
 
 		sensorsOutputTextView=(TextView) findViewById(R.id.SensorsOutput);
 		sensorsOutputString=getString(R.string.SensorsOutput);
+		axisOutputTextView=(TextView) findViewById(R.id.AxisOutput);
+		axisOutputString=getString(R.string.AxisOutput);
 		
 	}
 
@@ -80,6 +84,8 @@ public class AugmentedRealityActivity extends Activity implements
 		cv.setDeviceOrientation(newConfig.orientation);
 
 	}
+	
+	
 
 	@Override
 	protected void onPause() {
@@ -95,12 +101,28 @@ public class AugmentedRealityActivity extends Activity implements
 
 	@Override
 	public void onOrientationChanged(Orientation orientation) {
+		sensorsOutputTextView.setText(String.format(sensorsOutputString, orientation.getAzimuth(), orientation.getPitch(), orientation.getRoll()));
+		axisOutputTextView.setText(String.format(axisOutputString, 0,0,getZ(orientation)));
 
 		ar.setOrientation(orientation);
 		cv.setOrientation(orientation);
 		
-		sensorsOutputTextView.setText(String.format(sensorsOutputString, orientation.getCompass(), orientation.getPitch(), orientation.getRoll()));
 
+	}
+	
+	
+	private float getZ(Orientation orientation) {
+		float z;
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			z=orientation.getAzimuth();
+		}else{
+			if (orientation.getRoll()<0) {
+				z=orientation.getAzimuth()+90;
+			}else{
+				z=orientation.getAzimuth()-90;
+			}
+		}
+		return z % 360;
 	}
 
 	@Override
