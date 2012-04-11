@@ -131,7 +131,7 @@ public abstract class AppuntaView extends View {
 		}
 		return renderer;
 	}
-
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -145,6 +145,7 @@ public abstract class AppuntaView extends View {
 		}
 		postRender(canvas);
 	}
+
 
 	/***
 	 * Returns the correct size of the control when needed (Basically

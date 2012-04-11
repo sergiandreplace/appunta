@@ -15,22 +15,26 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:background="@drawable/bkg" />
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center"
-            android:scaleType="fitXY"
-            android:src="@drawable/scanlines" />
     </FrameLayout>
 
-    <SeekBar
-        android:id="@+id/seekBar1"
-        android:layout_width="fill_parent"
+    <LinearLayout
+            android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:max="1000" />
+        android:orientation="vertical" >
 
+        <SeekBar
+            android:id="@+id/seekBar1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:max="1000" />
+
+    <TextView
+        android:id="@+id/degrees"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+    </TextView>
+    </LinearLayout>
+        
 </LinearLayout>
 

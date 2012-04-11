@@ -20,7 +20,6 @@ package com.sergiandreplace.appunta.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.sergiandreplace.appunta.point.Point;
 
@@ -35,12 +34,12 @@ public class LandscapeEyeView extends AppuntaView {
 	private double cosCamXrot;
 	private double sinCamZrot;
 	private double cosCamZrot;
-	private float cz;
-	private float cy;
-	private float cx;
-	private float az;
-	private float ay;
-	private float ax;
+	private double cz;
+	private double cy;
+	private double cx;
+	private double az;
+	private double ay;
+	private double ax;
 	private double dx;
 	private double dy;
 	private double dz;

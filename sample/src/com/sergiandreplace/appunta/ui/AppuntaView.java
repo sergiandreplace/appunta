@@ -17,18 +17,21 @@
 
 package com.sergiandreplace.appunta.ui;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
+import android.location.Location;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.sergiandreplace.appunta.location.Location;
 import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.point.Point;
-import com.sergiandreplace.appunta.point.Points;
-import com.sergiandreplace.appunta.point.renderer.SimplePointRenderer;
+import com.sergiandreplace.appunta.point.PointsUtil;
+import com.sergiandreplace.appunta.point.impl.SimplePoint;
+import com.sergiandreplace.appunta.point.renderer.PointRenderer;
 
 /***
  * <p>This is the base class in order to create Views using the Appunta system.
@@ -41,7 +44,7 @@ import com.sergiandreplace.appunta.point.renderer.SimplePointRenderer;
  * <li>The <b>preRender</b> phase triggers the method {@link #preRender}, used to draw all needed elements used in
  * the background.</li>
  * 
- * <li>In the <b>pointRendering</b> phase, the method {@link #calculatePointCoordinates(Point)} is invoked per each on of the points, 
+ * <li>In the <b>pointRendering</b> phase, the method {@link #calculatePointCoordinates(SimplePoint)} is invoked per each on of the points, 
  * in order to calculate the screen coordinates for each one of them. Then, they are painted by calling
  * their PaintRenderer.
  * </li>
@@ -69,7 +72,7 @@ public abstract class AppuntaView extends View {
 	private double maxDistance = DEFAULT_MAX_DISTANCE;
 
 
-	private Points points;
+	private List<? extends Point> points;
 
 	private OnPointPressedListener onPointPressedListener;
 
@@ -81,7 +84,7 @@ public abstract class AppuntaView extends View {
 
 	private int deviceOrientation=Configuration.ORIENTATION_LANDSCAPE;
 
-	private SimplePointRenderer simplePointRenderer;
+	private PointRenderer pointRenderer;
 
 	public AppuntaView(Context context) {
 		super(context);
@@ -124,10 +127,11 @@ public abstract class AppuntaView extends View {
 					point.getRenderer().drawPoint(point, canvas, this.orientation);
 					
 				}else{
-					if (simplePointRenderer==null) {
-						simplePointRenderer=new SimplePointRenderer();
+					if (getPointRenderer()==null && this.pointRenderer!=null) {
+						setPointRenderer(this.pointRenderer);
+						getPointRenderer().drawPoint(point,canvas,this.orientation);
+
 					}
-					simplePointRenderer.drawPoint(point,canvas,this.orientation);
 				}
 			}
 		}
@@ -187,7 +191,7 @@ public abstract class AppuntaView extends View {
 
 
 
-	protected Points getpoints() {
+	protected List<? extends Point> getpoints() {
 		return points;
 	}
 
@@ -221,10 +225,10 @@ public abstract class AppuntaView extends View {
 
 	public void setPosition(Location location) {
 		this.location=location;
-		points.calculateDistance(location);
+		PointsUtil.calculateDistance(points,location);
 	}
 
-	public void setPoints(Points points) {
+	public void setPoints(List<? extends Point> points) {
 		this.points=points;
 }
 
@@ -234,6 +238,14 @@ public abstract class AppuntaView extends View {
 
 	public void setDeviceOrientation(int deviceOrientation) {
 		this.deviceOrientation = deviceOrientation;
+	}
+
+	public PointRenderer getPointRenderer() {
+		return pointRenderer;
+	}
+
+	public void setPointRenderer(PointRenderer pointRenderer) {
+		this.pointRenderer = pointRenderer;
 	}
 
 

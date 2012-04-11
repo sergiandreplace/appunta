@@ -42,8 +42,8 @@ public class CameraView extends SurfaceView implements Callback {
            try {
                    camera.setPreviewDisplay(previewHolder);
            }
- catch (Exception e) {
-		}
+           catch (Exception e) {
+           }
 	}
 
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -59,4 +59,6 @@ public class CameraView extends SurfaceView implements Callback {
 		camera.stopPreview();
 		camera.release();
 	}
+	
+	
 }

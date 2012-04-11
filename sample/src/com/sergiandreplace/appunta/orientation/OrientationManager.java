@@ -34,9 +34,13 @@ import android.hardware.SensorManager;
  * 
  */
 public class OrientationManager implements SensorEventListener {
+	
+	private static final float SMOOTH_FACTOR = 0.3f;
+	private static final float SMOOTH_THRESHOLD = 30.0f;
 
 	private SensorManager sensorManager;
 	private Orientation orientation = new Orientation();
+	private Orientation oldOrientation;
 	private List<Sensor> sensors;
 	private boolean sensorRunning = false;
 	private OnOrientationChangedListener onOrientationChangeListener;
@@ -58,6 +62,9 @@ public class OrientationManager implements SensorEventListener {
 	public OrientationManager() {
 
 	}
+	
+	
+
 
 	/***
 	 * This method registers this class as a listener of the Sensor service
@@ -72,7 +79,7 @@ public class OrientationManager implements SensorEventListener {
 			sensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
 			if (sensors.size() > 0) {
 				sensorManager.registerListener(this, sensors.get(0),
-						SensorManager.SENSOR_DELAY_FASTEST);
+						SensorManager.SENSOR_DELAY_UI);
 				sensorRunning = true;
 			}
 		}
@@ -84,15 +91,52 @@ public class OrientationManager implements SensorEventListener {
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// Check azimuth (N - S - W - E)
-		orientation.setAzimuth(event.values[0]);
-		orientation.setPitch(event.values[1]);
-		orientation.setRoll(event.values[2]);
-
+		if (oldOrientation==null) {
+			orientation.setAzimuth(event.values[0]);
+			orientation.setPitch(event.values[1]);
+			orientation.setRoll(event.values[2]);
+		}else{
+			orientation.setAzimuth(lowPass(event.values[0], oldOrientation.getAzimuth()));
+			orientation.setPitch(lowPass(event.values[1], oldOrientation.getPitch()));
+			orientation.setRoll(lowPass(event.values[2], oldOrientation.getRoll()));
+		}
+		oldOrientation=orientation;
 		if (getOnCompassChangeListener() != null) {
 			getOnCompassChangeListener().onOrientationChanged(orientation);
 		}
-		// Check pitch - phone flat or standing up
-
+	}
+	
+	
+	/**
+	 * Applies a lowpass filter to the change in the lecture of the sensor
+	 * @param newValue the new sensor value
+	 * @param lowValue the old sensor value
+	 * @return and intermediate value
+	 */
+	public float lowPass(float newValue, float lowValue) {
+		float compass;
+		if (Math.abs(newValue - lowValue) < 180) {
+		    if (Math.abs(newValue - lowValue) > SMOOTH_THRESHOLD) {
+		    	compass = newValue;
+		    }
+		    else {
+		    	compass = lowValue + SMOOTH_FACTOR * (newValue - lowValue);
+		    }
+		}
+		else {
+		    if (360.0 - Math.abs(newValue - lowValue) > SMOOTH_THRESHOLD) {
+		    	compass = newValue;
+		    }
+		    else {
+		        if (lowValue > newValue) {
+		        	compass = (lowValue + SMOOTH_FACTOR * ((360 + newValue - lowValue) % 360) + 360) % 360;
+		        } 
+		        else {
+		        	compass = (lowValue - SMOOTH_FACTOR * ((360 - newValue + lowValue) % 360) + 360) % 360;
+		        }
+		    }
+		}
+		return compass;
 	}
 
 	@Override

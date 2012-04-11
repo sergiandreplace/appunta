@@ -1,5 +1,7 @@
 package com.sergiandreplace.appunta.sample;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -9,14 +11,13 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sergiandreplace.appunta.location.Location;
+import com.sergiandreplace.appunta.location.LocationBuilder;
 import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.orientation.OrientationManager;
 import com.sergiandreplace.appunta.orientation.OrientationManager.OnOrientationChangedListener;
 import com.sergiandreplace.appunta.point.Point;
-import com.sergiandreplace.appunta.point.Points;
-import com.sergiandreplace.appunta.point.renderer.AugmentedDrawablePointRenderer;
 import com.sergiandreplace.appunta.point.renderer.PointRenderer;
+import com.sergiandreplace.appunta.point.renderer.impl.AugmentedDrawablePointRenderer;
 import com.sergiandreplace.appunta.ui.AppuntaView.OnPointPressedListener;
 import com.sergiandreplace.appunta.ui.CameraView;
 import com.sergiandreplace.appunta.ui.EyeView;
@@ -31,7 +32,9 @@ public class AugmentedRealityActivity extends Activity implements
 	private CameraView camera;
 	private FrameLayout cameraFrame;
 	private OrientationManager compass;
-
+	private String sensorsOutputString;
+	private TextView sensorsOutputTextView;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -51,20 +54,23 @@ public class AugmentedRealityActivity extends Activity implements
 		PointRenderer arRenderer = new AugmentedDrawablePointRenderer(
 				this.getResources(), R.drawable.city);
 
-		Points points = PointsModel.getPoints(arRenderer);
-		Points cpoints = PointsModel.getPoints(null);
+		List<Point> points = PointsModel.getPoints(arRenderer);
+		List<Point> cpoints = PointsModel.getPoints(null);
 		
 		ar.setPoints(points);
-		ar.setPosition(new Location(41.3825, 2.176944));// BCN
+		ar.setPosition(LocationBuilder.createLocation(41.3825, 2.176944));// BCN
 		ar.setOnPointPressedListener(this);
 		cv.setPoints(cpoints);
-		cv.setPosition(new Location(41.3825, 2.176944));// BCN
+		cv.setPosition(LocationBuilder.createLocation(41.3825, 2.176944));// BCN
 		cv.setRotableBackground(R.drawable.arrow);
 
 		cameraFrame = (FrameLayout) findViewById(R.id.cameraFrame);
 		camera = new CameraView(this);
 		cameraFrame.addView(camera);
 
+		sensorsOutputTextView=(TextView) findViewById(R.id.SensorsOutput);
+		sensorsOutputString=getString(R.string.SensorsOutput);
+		
 	}
 
 	@Override
@@ -92,6 +98,8 @@ public class AugmentedRealityActivity extends Activity implements
 
 		ar.setOrientation(orientation);
 		cv.setOrientation(orientation);
+		
+		sensorsOutputTextView.setText(String.format(sensorsOutputString, orientation.getCompass(), orientation.getPitch(), orientation.getRoll()));
 
 	}
 

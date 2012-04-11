@@ -35,12 +35,12 @@ public class EyeView extends AppuntaView {
 	private double cosCamXrot;
 	private double sinCamZrot;
 	private double cosCamZrot;
-	private float cz;
-	private float cy;
-	private float cx;
-	private float az;
-	private float ay;
-	private float ax;
+	private double cz;
+	private double cy;
+	private double cx;
+	private double az;
+	private double ay;
+	private double ax;
 	private double dx;
 	private double dy;
 	private double dz;

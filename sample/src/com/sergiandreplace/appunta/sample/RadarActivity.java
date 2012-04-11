@@ -1,5 +1,7 @@
 package com.sergiandreplace.appunta.sample;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,13 +12,12 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sergiandreplace.appunta.location.Location;
+import com.sergiandreplace.appunta.location.LocationBuilder;
 import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.orientation.OrientationManager;
 import com.sergiandreplace.appunta.orientation.OrientationManager.OnOrientationChangedListener;
 import com.sergiandreplace.appunta.point.Point;
-import com.sergiandreplace.appunta.point.Points;
-import com.sergiandreplace.appunta.point.renderer.DrawablePointRenderer;
+import com.sergiandreplace.appunta.point.renderer.impl.DrawablePointRenderer;
 import com.sergiandreplace.appunta.ui.AppuntaView.OnPointPressedListener;
 import com.sergiandreplace.appunta.ui.RadarView;
 
@@ -25,7 +26,7 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 	TextView textviewAzimuth, textviewPitch, textviewRoll;
 	private RadarView radar;
 	private OrientationManager compass;
-
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -38,13 +39,15 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 		radar.setOnPointPressedListener(this);
 		
 		DrawablePointRenderer renderer=new DrawablePointRenderer(this.getResources(), R.drawable.marker);
-		Points points=PointsModel.getPoints(renderer);
+		List<Point> points=PointsModel.getPoints(renderer);
 		radar.setDeviceOrientation(getDeviceOrientation());
 		radar.setPoints(points);
-		radar.setPosition(new Location(41.3825, 2.176944));//BCN
+		radar.setPosition(LocationBuilder.createLocation(41.3825, 2.176944));//BCN
 		radar.setRotableBackground(R.drawable.arrow);
 		
 		((SeekBar)findViewById(R.id.seekBar1)).setOnSeekBarChangeListener(this);
+		
+		
 	}
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -98,5 +101,6 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 		Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 		return display.getOrientation();
 	}
+	
 }
 

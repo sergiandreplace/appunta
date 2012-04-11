@@ -15,7 +15,7 @@
 
  */
 
-package com.sergiandreplace.appunta.point.renderer;
+package com.sergiandreplace.appunta.point.renderer.impl;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -27,6 +27,7 @@ import android.graphics.Typeface;
 
 import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.point.Point;
+import com.sergiandreplace.appunta.point.renderer.PointRenderer;
 
 /***
  * This class is used to generate a PointRenderer using a drawable

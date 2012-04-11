@@ -15,7 +15,7 @@
 
  */
 
-package com.sergiandreplace.appunta.point.renderer;
+package com.sergiandreplace.appunta.point.renderer.impl;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -23,6 +23,7 @@ import android.graphics.Paint;
 
 import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.point.Point;
+import com.sergiandreplace.appunta.point.renderer.PointRenderer;
 
 /***
  * A simple Point renderer used as default by the compass
