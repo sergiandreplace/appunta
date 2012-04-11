@@ -102,7 +102,7 @@ public class AugmentedRealityActivity extends Activity implements
 	@Override
 	public void onOrientationChanged(Orientation orientation) {
 		sensorsOutputTextView.setText(String.format(sensorsOutputString, orientation.getAzimuth(), orientation.getPitch(), orientation.getRoll()));
-		axisOutputTextView.setText(String.format(axisOutputString, 0,0,getZ(orientation)));
+		axisOutputTextView.setText(String.format(axisOutputString, getX(orientation),0f,getZ(orientation)));
 
 		ar.setOrientation(orientation);
 		cv.setOrientation(orientation);
@@ -111,20 +111,34 @@ public class AugmentedRealityActivity extends Activity implements
 	}
 	
 	
+	private float getX(Orientation orientation) {
+		float x;
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			x=orientation.getAzimuth();
+		}else{
+			if (orientation.getRoll()<0) {
+				x=orientation.getAzimuth()+270;
+			}else{
+				x=orientation.getAzimuth()+90;
+			}
+		}
+		return x % 360;
+	}
+
 	private float getZ(Orientation orientation) {
 		float z;
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			z=orientation.getAzimuth();
+			z=orientation.getPitch()+90;
 		}else{
 			if (orientation.getRoll()<0) {
-				z=orientation.getAzimuth()+90;
+				z=450-orientation.getRoll();
 			}else{
-				z=orientation.getAzimuth()-90;
+				z=90+orientation.getRoll();
 			}
 		}
 		return z % 360;
 	}
-
+	
 	@Override
 	public void onPointPressed(Point p) {
 		Toast.makeText(this, p.getName(), Toast.LENGTH_SHORT).show();

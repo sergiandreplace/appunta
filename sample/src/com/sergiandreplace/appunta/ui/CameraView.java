@@ -46,7 +46,7 @@ public class CameraView extends SurfaceView implements Callback {
 		try {
 			camera.setPreviewDisplay(previewHolder);
 		} catch (Exception e) {
-		}
+           }
 	}
 
 	// http://stackoverflow.com/a/6991886/462615
@@ -77,4 +77,6 @@ public class CameraView extends SurfaceView implements Callback {
 		} catch (Exception e1) {
 		}
 	}
+	
+	
 }
