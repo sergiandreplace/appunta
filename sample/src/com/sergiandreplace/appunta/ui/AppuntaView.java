@@ -20,7 +20,6 @@ package com.sergiandreplace.appunta.ui;
 import java.util.List;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.location.Location;
 import android.util.AttributeSet;
@@ -58,6 +57,8 @@ import com.sergiandreplace.appunta.point.renderer.PointRenderer;
  */
 public abstract class AppuntaView extends View {
 
+	
+	
 	public interface OnPointPressedListener {
 		public void onPointPressed(Point p);
 	}
@@ -65,7 +66,6 @@ public abstract class AppuntaView extends View {
 	private static final double DEFAULT_MAX_DISTANCE = 1000;
 
 
-	private Orientation orientation;
 	private Location location;
 
 	
@@ -82,9 +82,10 @@ public abstract class AppuntaView extends View {
 
 	private Point p;
 
-	private int deviceOrientation=Configuration.ORIENTATION_LANDSCAPE;
 
 	private PointRenderer pointRenderer;
+	
+	private Orientation orientation;
 
 	public AppuntaView(Context context) {
 		super(context);
@@ -124,12 +125,12 @@ public abstract class AppuntaView extends View {
 			for (Point point : getpoints()) {
 				calculatePointCoordinates(point);
 				if (point.getRenderer()!=null){
-					point.getRenderer().drawPoint(point, canvas, this.orientation);
+					point.getRenderer().drawPoint(point, canvas,orientation);
 					
 				}else{
 					if (getPointRenderer()==null && this.pointRenderer!=null) {
 						setPointRenderer(this.pointRenderer);
-						getPointRenderer().drawPoint(point,canvas,this.orientation);
+						getPointRenderer().drawPoint(point,canvas,orientation);
 
 					}
 				}
@@ -195,18 +196,7 @@ public abstract class AppuntaView extends View {
 		return points;
 	}
 
-	public void setOrientation(Orientation orientation) {
-	
-		this.orientation=orientation;
-		this.invalidate();
 
-	}
-	
-	protected Orientation getOrientation() {
-		return this.orientation;
-	}
-
-	
 	public void setLocation(Location location) {
 		this.location=location;
 	}
@@ -232,20 +222,24 @@ public abstract class AppuntaView extends View {
 		this.points=points;
 }
 
-	public int getDeviceOrientation() {
-		return deviceOrientation;
-	}
-
-	public void setDeviceOrientation(int deviceOrientation) {
-		this.deviceOrientation = deviceOrientation;
-	}
-
 	public PointRenderer getPointRenderer() {
 		return pointRenderer;
 	}
 
 	public void setPointRenderer(PointRenderer pointRenderer) {
 		this.pointRenderer = pointRenderer;
+
+	}
+
+	public Orientation getOrientation() {
+		return orientation;
+	}
+
+	public void setOrientation(Orientation orientation) {
+		this.orientation = orientation;
+		
+		this.invalidate();
+
 	}
 
 

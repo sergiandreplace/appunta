@@ -18,9 +18,9 @@
 package com.sergiandreplace.appunta.ui;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.sergiandreplace.appunta.point.Point;
 
@@ -46,13 +46,8 @@ public class EyeView extends AppuntaView {
 	private double dz;
 	private double by;
 	private double bx;
-	private float pitch;
-	private float roll;
-	private float rollAngle;
 	private double ez = 1;
-	private float compass;
-	private float pitchAngle;
-	private float compassAngle;
+
 	
 	
 	public EyeView(Context context) {
@@ -70,38 +65,10 @@ public class EyeView extends AppuntaView {
 	@Override
 	protected void preRender(Canvas canvas) {
 
-	
-		pitch = getOrientation().getPitch();
-		roll = getOrientation().getRoll();
-		compass = getOrientation().getCompass();
+		camXrot = getOrientation().getX();
+		camYrot =getOrientation().getY();
+		camZrot = getOrientation().getZ();
 
-		if (getDeviceOrientation()==Configuration.ORIENTATION_PORTRAIT) { //IF ORIENTATION IS VERTICAL
-			rollAngle=-roll;
-			pitchAngle=pitch;
-			compassAngle=compass+180;
-
-			camXrot = Math.toRadians(pitchAngle);
-			camYrot = Math.toRadians(rollAngle);
-			camZrot = Math.toRadians(compassAngle);
-
-		}else{
-			if (pitch < -90 || pitch > 90) {
-				rollAngle = roll;
-				compassAngle = compass + 90;
-			} else {
-				rollAngle = -roll;
-				compassAngle = compass - 90;
-			}
-			pitchAngle=-pitch;	
-			
-
-			camXrot = Math.toRadians(rollAngle);
-			camYrot = Math.toRadians(pitchAngle);
-			camZrot = Math.toRadians(compassAngle);
-		}
-			
-			
-			
 		sinCamXrot = Math.sin(camXrot);
 		cosCamXrot = Math.cos(camXrot);
 
@@ -111,17 +78,17 @@ public class EyeView extends AppuntaView {
 		sinCamZrot = Math.sin(camZrot);
 		cosCamZrot = Math.cos(camZrot);
 
-		cx = getLocation().getLatitude();
+		cz = getLocation().getLatitude();
 		cy = getLocation().getLongitude();
-		cz = getLocation().getAltitude();
+		cx = getLocation().getAltitude();
 
 	}
 
 	@Override
 	protected void calculatePointCoordinates(Point point) {
-		ax = point.getLocation().getLatitude();
+		az = point.getLocation().getLatitude();
 		ay = point.getLocation().getLongitude();
-		az = point.getLocation().getAltitude();
+		ax = point.getLocation().getAltitude();
 
 		// Check this article before trying to only understand a simple comma
 		// http://en.wikipedia.org/wiki/3D_projection#Perspective_projection
@@ -130,7 +97,7 @@ public class EyeView extends AppuntaView {
 		dy = sinCamXrot * (cosCamYrot * (az - cz) + sinCamYrot * (sinCamZrot * (ay - cy) + cosCamZrot * (ax - cx))) + cosCamXrot * (cosCamZrot * (ay - cy) - sinCamZrot * (ax - cx));
 		dz = cosCamXrot * (cosCamYrot * (az - cz) + sinCamYrot * (sinCamZrot * (ay - cy) + cosCamZrot * (ax - cx))) - sinCamXrot * (cosCamZrot * (ay - cy) - sinCamZrot * (ax - cx));
 
-		// Log.v("appunta", "DX: "+dx+"\tDY: " +dy+"\tDX: "+dz);
+		Log.v("appunta", "DX: "+dx+"   DY: " +dy+"   DZ: "+dz);
 		if (dz > 0) {
 
 			bx = getWidth() / 2 - (dx * ez / dz) * getWidth();

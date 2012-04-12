@@ -19,6 +19,8 @@ package com.sergiandreplace.appunta.orientation;
 
 import java.util.List;
 
+import com.sergiandreplace.appunta.sample.R;
+
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -35,8 +37,12 @@ import android.hardware.SensorManager;
  */
 public class OrientationManager implements SensorEventListener {
 	
-	private static final float SMOOTH_FACTOR = 0.3f;
-	private static final float SMOOTH_THRESHOLD = 30.0f;
+	public static final int MODE_COMPASS=0;
+	public static final int MODE_AR=1;
+
+	private static final float CIRCLE = (float) (Math.PI * 2);
+	private static final float SMOOTH_THRESHOLD = CIRCLE / 6;
+	private static final float SMOOTH_FACTOR = SMOOTH_THRESHOLD / 5;
 
 	private SensorManager sensorManager;
 	private Orientation orientation = new Orientation();
@@ -44,6 +50,18 @@ public class OrientationManager implements SensorEventListener {
 	private List<Sensor> sensors;
 	private boolean sensorRunning = false;
 	private OnOrientationChangedListener onOrientationChangeListener;
+	private int axisMode = MODE_COMPASS;
+	private int firstAxis=SensorManager.AXIS_Y;
+	private int secondAxis=SensorManager.AXIS_MINUS_X;
+
+	float x, y, z;
+
+	private float[] mGravs = new float[3];
+	private float[] mGeoMags = new float[3];
+	private float[] mOrientation = new float[3];
+	private float[] mRotationM = new float[9];
+	private float[] mRemapedRotationM = new float[9];
+	private boolean mFailed;
 
 	/***
 	 * This constructor will generate and start a Compass Manager
@@ -62,9 +80,6 @@ public class OrientationManager implements SensorEventListener {
 	public OrientationManager() {
 
 	}
-	
-	
-
 
 	/***
 	 * This method registers this class as a listener of the Sensor service
@@ -76,12 +91,15 @@ public class OrientationManager implements SensorEventListener {
 		if (!sensorRunning) {
 			sensorManager = (SensorManager) activity
 					.getSystemService(Context.SENSOR_SERVICE);
-			sensors = sensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
-			if (sensors.size() > 0) {
-				sensorManager.registerListener(this, sensors.get(0),
-						SensorManager.SENSOR_DELAY_UI);
-				sensorRunning = true;
-			}
+			sensorManager.registerListener(this,
+					sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+					SensorManager.SENSOR_DELAY_UI);
+			sensorManager.registerListener(this,
+					sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+					SensorManager.SENSOR_DELAY_UI);
+
+			sensorRunning = true;
+
 		}
 	}
 
@@ -90,51 +108,88 @@ public class OrientationManager implements SensorEventListener {
 	 */
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		// Check azimuth (N - S - W - E)
-		if (oldOrientation==null) {
-			orientation.setAzimuth(event.values[0]);
-			orientation.setPitch(event.values[1]);
-			orientation.setRoll(event.values[2]);
-		}else{
-			orientation.setAzimuth(lowPass(event.values[0], oldOrientation.getAzimuth()));
-			orientation.setPitch(lowPass(event.values[1], oldOrientation.getPitch()));
-			orientation.setRoll(lowPass(event.values[2], oldOrientation.getRoll()));
+		switch (event.sensor.getType()) {
+		case Sensor.TYPE_ACCELEROMETER:
+			System.arraycopy(event.values, 0, mGravs, 0, 3);
+			break;
+		case Sensor.TYPE_MAGNETIC_FIELD:
+			// sensorManagerHere let's try another way:
+			for (int i = 0; i < 3; i++)
+				mGeoMags[i] = event.values[i];
+			break;
+		default:
+			return;
 		}
-		oldOrientation=orientation;
+		if (SensorManager.getRotationMatrix(mRotationM, null, mGravs, mGeoMags)) {
+			// Rotate to the camera's line of view (Y axis along the camera's
+			// axis)
+			SensorManager.remapCoordinateSystem(mRotationM,
+					firstAxis, secondAxis,mRemapedRotationM);
+			SensorManager.getOrientation(mRemapedRotationM, mOrientation);
+			onSuccess();
+		} // else
+			// onFailure();
+	}
+
+	void onSuccess() {
+		if (mFailed)
+			mFailed = false;
+
+		// Convert the azimuth to degrees in 0.5 degree resolution.
+		x = mOrientation[0];
+		y = mOrientation[1] ;
+		z = mOrientation[2] ;
+
+		if (oldOrientation == null) {
+			orientation.setX(x);
+			orientation.setY(y);
+			orientation.setZ(z);
+		} else {
+			orientation.setX(lowPass(x, oldOrientation.getX()));
+			orientation.setY(lowPass(y, oldOrientation.getY()));
+			orientation.setZ(lowPass(z, oldOrientation.getZ()));
+		}
+
+		oldOrientation = orientation;
+
 		if (getOnCompassChangeListener() != null) {
 			getOnCompassChangeListener().onOrientationChanged(orientation);
+
 		}
+
 	}
-	
-	
+
 	/**
 	 * Applies a lowpass filter to the change in the lecture of the sensor
-	 * @param newValue the new sensor value
-	 * @param lowValue the old sensor value
+	 * 
+	 * @param newValue
+	 *            the new sensor value
+	 * @param lowValue
+	 *            the old sensor value
 	 * @return and intermediate value
 	 */
 	public float lowPass(float newValue, float lowValue) {
 		float compass;
-		if (Math.abs(newValue - lowValue) < 180) {
-		    if (Math.abs(newValue - lowValue) > SMOOTH_THRESHOLD) {
-		    	compass = newValue;
-		    }
-		    else {
-		    	compass = lowValue + SMOOTH_FACTOR * (newValue - lowValue);
-		    }
-		}
-		else {
-		    if (360.0 - Math.abs(newValue - lowValue) > SMOOTH_THRESHOLD) {
-		    	compass = newValue;
-		    }
-		    else {
-		        if (lowValue > newValue) {
-		        	compass = (lowValue + SMOOTH_FACTOR * ((360 + newValue - lowValue) % 360) + 360) % 360;
-		        } 
-		        else {
-		        	compass = (lowValue - SMOOTH_FACTOR * ((360 - newValue + lowValue) % 360) + 360) % 360;
-		        }
-		    }
+		if (Math.abs(newValue - lowValue) < CIRCLE / 2) {
+			if (Math.abs(newValue - lowValue) > SMOOTH_THRESHOLD) {
+				compass = newValue;
+			} else {
+				compass = lowValue + SMOOTH_FACTOR * (newValue - lowValue);
+			}
+		} else {
+			if (CIRCLE - Math.abs(newValue - lowValue) > SMOOTH_THRESHOLD) {
+				compass = newValue;
+			} else {
+				if (lowValue > newValue) {
+					compass = (lowValue + SMOOTH_FACTOR
+							* ((CIRCLE + newValue - lowValue) % CIRCLE) + CIRCLE)
+							% CIRCLE;
+				} else {
+					compass = (lowValue - SMOOTH_FACTOR
+							* ((CIRCLE - newValue + lowValue) % CIRCLE) + CIRCLE)
+							% CIRCLE;
+				}
+			}
 		}
 		return compass;
 	}
@@ -150,7 +205,7 @@ public class OrientationManager implements SensorEventListener {
 	public void stopSensor() {
 		if (sensorRunning) {
 			sensorManager.unregisterListener(this);
-			sensorRunning=false;
+			sensorRunning = false;
 		}
 	}
 
@@ -180,6 +235,22 @@ public class OrientationManager implements SensorEventListener {
 
 	public void setOrientation(Orientation orientation) {
 		this.orientation = orientation;
+	}
+
+	public int getAxisMode() {
+		return axisMode;
+	}
+
+	public void setAxisMode(int axisMode) {
+		this.axisMode = axisMode;
+		if (axisMode==MODE_COMPASS) {
+			 firstAxis=SensorManager.AXIS_Y;
+			 secondAxis=SensorManager.AXIS_MINUS_X;
+		}
+		if (axisMode==MODE_AR) {
+			 firstAxis=SensorManager.AXIS_X;
+			 secondAxis=SensorManager.AXIS_Z;
+		}
 	}
 
 	public interface OnOrientationChangedListener {

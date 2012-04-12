@@ -5,7 +5,6 @@
     <string name="slogan">AR easy</string>
     <string name="radar">"Radar "</string>
     <string name="ra">Augmented\nReality</string>
-    <string name="SensorsOutput" formatted="false" >Compass %3.0f :: Pitch %3.0f :: Roll %3.0f</string>
-    <string name="AxisOutput" formatted="false">X %3.0f :: Y %3.0f :: Z %3.0f </string>
+    <string name="AxisOutput" formatted="false">X %.2f :: Y %.2f :: Z %.2f</string>
 
 </resources>

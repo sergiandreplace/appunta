@@ -49,7 +49,7 @@ public class PanoramaView extends AppuntaView {
 
 	@Override
 	protected void calculatePointCoordinates(Point point) {
-		double angularDistance = angleDifference(getOrientation().getCompassRadians(), MAX_DEGREES
+		double angularDistance = angleDifference(Math.toRadians(getOrientation().getX()), MAX_DEGREES
 				/ 4 - getAngle(point));
 		// double angularDistance= getAngle(point);
 		point.setX((float) ((angularDistance + VISIBLE_DEGREES / 2) * getWidth() / VISIBLE_DEGREES));

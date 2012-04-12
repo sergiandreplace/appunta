@@ -40,7 +40,6 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 		
 		DrawablePointRenderer renderer=new DrawablePointRenderer(this.getResources(), R.drawable.marker);
 		List<Point> points=PointsModel.getPoints(renderer);
-		radar.setDeviceOrientation(getDeviceOrientation());
 		radar.setPoints(points);
 		radar.setPosition(LocationBuilder.createLocation(41.3825, 2.176944));//BCN
 		radar.setRotableBackground(R.drawable.arrow);
@@ -52,7 +51,6 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		radar.setDeviceOrientation(newConfig.orientation);
 
 	}
 	
