@@ -62,6 +62,8 @@ public class OrientationManager implements SensorEventListener {
 	private float[] mRotationM = new float[9];
 	private float[] mRemapedRotationM = new float[9];
 	private boolean mFailed;
+	
+	private  Activity activity;
 
 	/***
 	 * This constructor will generate and start a Compass Manager
@@ -88,6 +90,7 @@ public class OrientationManager implements SensorEventListener {
 	 *            The activity over this will work
 	 */
 	public void startSensor(Activity activity) {
+		this.activity=activity;
 		if (!sensorRunning) {
 			sensorManager = (SensorManager) activity
 					.getSystemService(Context.SENSOR_SERVICE);
@@ -131,14 +134,30 @@ public class OrientationManager implements SensorEventListener {
 			// onFailure();
 	}
 
+	public void setAxisMode(int axisMode) {
+		this.axisMode = axisMode;
+		if (axisMode==MODE_COMPASS) {
+			 firstAxis=SensorManager.AXIS_Y;
+			 secondAxis=SensorManager.AXIS_MINUS_X;
+		}
+		if (axisMode==MODE_AR) {
+			 firstAxis=SensorManager.AXIS_X;
+			 secondAxis=SensorManager.AXIS_Z;
+		}
+	}
+	
 	void onSuccess() {
 		if (mFailed)
 			mFailed = false;
 
 		// Convert the azimuth to degrees in 0.5 degree resolution.
-		x = mOrientation[0];
-		y = mOrientation[1] ;
+		x = mOrientation[1];
+		y = mOrientation[0] ;
 		z = mOrientation[2] ;
+		
+		if (axisMode==MODE_AR) {
+			//y=y+(getPhoneRotation(activity))*CIRCLE/4;
+		}
 
 		if (oldOrientation == null) {
 			orientation.setX(x);
@@ -241,17 +260,7 @@ public class OrientationManager implements SensorEventListener {
 		return axisMode;
 	}
 
-	public void setAxisMode(int axisMode) {
-		this.axisMode = axisMode;
-		if (axisMode==MODE_COMPASS) {
-			 firstAxis=SensorManager.AXIS_Y;
-			 secondAxis=SensorManager.AXIS_MINUS_X;
-		}
-		if (axisMode==MODE_AR) {
-			 firstAxis=SensorManager.AXIS_X;
-			 secondAxis=SensorManager.AXIS_Z;
-		}
-	}
+
 
 	public interface OnOrientationChangedListener {
 		/***
@@ -262,6 +271,10 @@ public class OrientationManager implements SensorEventListener {
 		 *            Orientation on degrees. 360-0 is north.
 		 */
 		public void onOrientationChanged(Orientation orientation);
+	}
+	
+	public static int getPhoneRotation(Activity activity) {
+		return activity.getWindowManager().getDefaultDisplay().getRotation();
 	}
 
 }

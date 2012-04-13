@@ -11,16 +11,20 @@ import com.sergiandreplace.appunta.point.renderer.PointRenderer;
 public class PointsModel {
 	static List<Point> getPoints(PointRenderer renderer) {
 		List<Point> points = new ArrayList<Point>();
-		points.add(new SimplePoint(1, LocationBuilder.createLocation(40.418889, -3.691944, 0), renderer, "Madrid")); 
-		points.add(new SimplePoint(2, LocationBuilder.createLocation(48.862230,  2.351074, 0), renderer, "Paris"));
-		points.add(new SimplePoint(3, LocationBuilder.createLocation(43.604260,  1.443670, 0), renderer, "Toulousse")); 
-		points.add(new SimplePoint(4, LocationBuilder.createLocation(41.650000, -0.880000, 0), renderer, "Zaragoza")); 
-		points.add(new SimplePoint(5, LocationBuilder.createLocation(39.566667,  2.650000, 0), renderer, "Palma"));
-		points.add(new SimplePoint(6, LocationBuilder.createLocation(43.297600,  5.377223, 0), renderer, "Marsella"));
-		points.add(new SimplePoint(7, LocationBuilder.createLocation(36.833333, 10.150000, 0), renderer, "Tunez"));
-		points.add(new SimplePoint(8, LocationBuilder.createLocation(41.900000, 12.500000, 0), renderer, "Roma"));
-		points.add(new SimplePoint(9, LocationBuilder.createLocation(38.980000,  1.430000, 0), renderer, "Ibiza"));
-		points.add(new SimplePoint(7, LocationBuilder.createLocation(39.966667,  4.083333, 0), renderer, "Menorca"));
+		points.add(new SimplePoint(1, LocationBuilder.createLocation(41.389545,2.1523280), renderer, "Clínic"));
+		points.add(new SimplePoint(2, LocationBuilder.createLocation(41.379642,2.1397590), renderer, "Sants"));
+		points.add(new SimplePoint(3, LocationBuilder.createLocation(41.377991,2.1482880), renderer, "Joan Miró"));
+		points.add(new SimplePoint(4, LocationBuilder.createLocation(41.378597,2.1620110), renderer, "Sant Antoni"));
+		points.add(new SimplePoint(5, LocationBuilder.createLocation(41.386875,2.1636120), renderer, "UB"));
+		points.add(new SimplePoint(6, LocationBuilder.createLocation(41.364731,2.1556380), renderer, "Estadi Olímpic"));
+		points.add(new SimplePoint(7, LocationBuilder.createLocation(41.374008,2.1496780), renderer, "Espanay"));
+		points.add(new SimplePoint(8, LocationBuilder.createLocation(41.400105,2.1811940), renderer, "Monumental"));
+		points.add(new SimplePoint(9, LocationBuilder.createLocation(41.403378,2.1739090), renderer, "Sagrada Familia"));
+		points.add(new SimplePoint(10, LocationBuilder.createLocation(41.380932,2.1227650), renderer, "Camp Nou"));
+		points.add(new SimplePoint(11, LocationBuilder.createLocation(41.386211,2.1166710), renderer, "UPC"));
+		points.add(new SimplePoint(12, LocationBuilder.createLocation(41.383797,2.1052120), renderer, "Cervantes"));
+		points.add(new SimplePoint(13, LocationBuilder.createLocation(41.371311,2.1495760), renderer, "Caixaforum"));
+		points.add(new SimplePoint(14, LocationBuilder.createLocation(41.39352,2.1840910), renderer, "Estació del Nord"));
 		return points;
 	}
 }

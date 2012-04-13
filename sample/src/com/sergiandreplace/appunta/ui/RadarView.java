@@ -77,7 +77,7 @@ public class RadarView extends AppuntaView {
 	@Override
 	protected void preRender(Canvas canvas) {
 		drawBackground(canvas);
-		compassAngle=getOrientation().getX();
+		compassAngle=getOrientation().getY();
 
 	}
 

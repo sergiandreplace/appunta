@@ -57,10 +57,10 @@ public class AugmentedRealityActivity extends Activity implements
 		List<Point> cpoints = PointsModel.getPoints(null);
 
 		ar.setPoints(points);
-		ar.setPosition(LocationBuilder.createLocation(41.3825, 2.176944));// BCN
+		ar.setPosition(LocationBuilder.createLocation(41.383804, 2.156719));// BCN
 		ar.setOnPointPressedListener(this);
 		cv.setPoints(cpoints);
-		cv.setPosition(LocationBuilder.createLocation(41.3825, 2.176944));// BCN
+		cv.setPosition(LocationBuilder.createLocation(41.383804, 2.156719));// BCN
 		cv.setRotableBackground(R.drawable.arrow);
 
 		cameraFrame = (FrameLayout) findViewById(R.id.cameraFrame);
@@ -96,17 +96,16 @@ public class AugmentedRealityActivity extends Activity implements
 	public void onOrientationChanged(Orientation orientation) {
 
 		axisOutputTextView.setText(String.format(axisOutputString,
-				orientation.getX(), orientation.getY(), orientation.getZ()));
+				orientation.getX(), orientation.getY(), orientation.getZ(), OrientationManager.getPhoneRotation(this)));
 
 		ar.setOrientation(orientation);
+		ar.setPhoneRotation(OrientationManager.getPhoneRotation(this));
 		cv.setOrientation(orientation);
 
 	}
 
 
-	public int getRotation() {
-		return getWindowManager().getDefaultDisplay().getRotation();
-	}
+
 
 	@Override
 	public void onPointPressed(Point p) {

@@ -86,6 +86,8 @@ public abstract class AppuntaView extends View {
 	private PointRenderer pointRenderer;
 	
 	private Orientation orientation;
+	
+	private int phoneRotation=0;
 
 	public AppuntaView(Context context) {
 		super(context);
@@ -240,6 +242,14 @@ public abstract class AppuntaView extends View {
 		
 		this.invalidate();
 
+	}
+
+	public int getPhoneRotation() {
+		return phoneRotation;
+	}
+
+	public void setPhoneRotation(int phoneRotation) {
+		this.phoneRotation = phoneRotation;
 	}
 
 

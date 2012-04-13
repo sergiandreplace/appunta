@@ -21,7 +21,9 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Surface;
 
+import com.sergiandreplace.appunta.orientation.OrientationManager;
 import com.sergiandreplace.appunta.point.Point;
 
 public class EyeView extends AppuntaView {
@@ -46,8 +48,7 @@ public class EyeView extends AppuntaView {
 	private double dz;
 	private double by;
 	private double bx;
-	private double ez = 1;
-
+	private double ez =-1.5;
 	
 	
 	public EyeView(Context context) {
@@ -64,11 +65,31 @@ public class EyeView extends AppuntaView {
 
 	@Override
 	protected void preRender(Canvas canvas) {
-
-		camXrot = getOrientation().getX();
-		camYrot =getOrientation().getY();
-		camZrot = getOrientation().getZ();
-
+		if (this.getPhoneRotation()==Surface.ROTATION_0) {
+			camXrot = getOrientation().getX();
+			camYrot = getOrientation().getY();
+			camZrot = -getOrientation().getZ();
+		}
+		if (this.getPhoneRotation()==Surface.ROTATION_180) {
+			camXrot = -getOrientation().getX();
+			camYrot = getOrientation().getY();
+			camZrot = getOrientation().getZ();
+			
+		}
+		
+		
+		if (this.getPhoneRotation()==Surface.ROTATION_90){
+			camXrot = -getOrientation().getY();
+			camYrot = getOrientation().getZ();
+			camZrot = getOrientation().getX();
+		}
+		if (this.getPhoneRotation()==Surface.ROTATION_270){
+			camXrot = getOrientation().getY();
+			camYrot = getOrientation().getZ();
+			camZrot = getOrientation().getX();
+		}
+		
+		
 		sinCamXrot = Math.sin(camXrot);
 		cosCamXrot = Math.cos(camXrot);
 
@@ -79,16 +100,19 @@ public class EyeView extends AppuntaView {
 		cosCamZrot = Math.cos(camZrot);
 
 		cz = getLocation().getLatitude();
-		cy = getLocation().getLongitude();
-		cx = getLocation().getAltitude();
+		cx = getLocation().getLongitude();
+		cy = 0;//getLocation().getAltitude();
 
 	}
 
 	@Override
 	protected void calculatePointCoordinates(Point point) {
 		az = point.getLocation().getLatitude();
-		ay = point.getLocation().getLongitude();
-		ax = point.getLocation().getAltitude();
+		if (this.getPhoneRotation()==Surface.ROTATION_90) {
+			
+		}
+		ax = point.getLocation().getLongitude();
+		ay = 0;//point.getLocation().getAltitude();
 
 		// Check this article before trying to only understand a simple comma
 		// http://en.wikipedia.org/wiki/3D_projection#Perspective_projection
@@ -96,14 +120,34 @@ public class EyeView extends AppuntaView {
 		dx = cosCamYrot * (sinCamZrot * (ay - cy) + cosCamZrot * (ax - cx)) - sinCamYrot * (az - cz);
 		dy = sinCamXrot * (cosCamYrot * (az - cz) + sinCamYrot * (sinCamZrot * (ay - cy) + cosCamZrot * (ax - cx))) + cosCamXrot * (cosCamZrot * (ay - cy) - sinCamZrot * (ax - cx));
 		dz = cosCamXrot * (cosCamYrot * (az - cz) + sinCamYrot * (sinCamZrot * (ay - cy) + cosCamZrot * (ax - cx))) - sinCamXrot * (cosCamZrot * (ay - cy) - sinCamZrot * (ax - cx));
-
-		Log.v("appunta", "DX: "+dx+"   DY: " +dy+"   DZ: "+dz);
+	
+		Log.v("appunta[" + point.getName() + "]",
+				String.format("DX: %.3f - DY: %.3f - DZ: %.3f", dx, dy, dz));
 		if (dz > 0) {
+			if (this.getPhoneRotation() == Surface.ROTATION_0)  {
 
-			bx = getWidth() / 2 - (dx * ez / dz) * getWidth();
-			by = getHeight() / 2 - (dy * ez / dz) * getHeight();
-			point.setX((float) bx);
+				bx = getWidth() / 2 + (dx * getWidth()) / (1 * dz);
+				by = getHeight() / 2 - (dy * getHeight()) / (1 * dz);
+			}
+			if (this.getPhoneRotation() == Surface.ROTATION_180)  {
+
+				bx = getWidth() / 2 - (dx * getWidth()) / (1 * dz);
+				by = getHeight() / 2 - (dy * getHeight()) / (1 * dz);
+			}
+			
+			if (this.getPhoneRotation() == Surface.ROTATION_90)  {
+
+				bx = getWidth() / 2 + (dx * getWidth()) / (1 * dz);
+				by = getHeight() / 2 + (dy * getHeight()) / (1 * dz);
+			}
+			if (this.getPhoneRotation() == Surface.ROTATION_270)  {
+
+				bx = getWidth() / 2 - (dx * getWidth()) / (1 * dz);
+				by = getHeight() / 2 + (dy * getHeight()) / (1 * dz);
+			}
+			
 			point.setY((float) by);
+			point.setX((float) bx);
 		} else {
 			point.setX(-15000);
 			point.setY(-15000);
@@ -115,5 +159,7 @@ public class EyeView extends AppuntaView {
 		// TODO Auto-generated method stub
 
 	}
+
+
 
 }

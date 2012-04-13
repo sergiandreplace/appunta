@@ -5,6 +5,6 @@
     <string name="slogan">AR easy</string>
     <string name="radar">"Radar "</string>
     <string name="ra">Augmented\nReality</string>
-    <string name="AxisOutput" formatted="false">X %.2f :: Y %.2f :: Z %.2f</string>
+    <string name="AxisOutput" formatted="false">X %.2f :: Y %.2f :: Z %.2f :: R %d</string>
 
 </resources>

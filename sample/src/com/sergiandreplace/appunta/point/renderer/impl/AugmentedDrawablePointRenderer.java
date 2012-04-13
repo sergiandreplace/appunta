@@ -84,7 +84,7 @@ public class AugmentedDrawablePointRenderer implements PointRenderer {
 		
 		}
 	
-		float size=(float) (10+(1000-point.getDistance())/25);
+		float size=(float) ((10-point.getDistance())*6);
 		canvas.drawCircle(point.getX(), point.getY(), (float) size, pCircle);
 		float textWidth=pText.breakText(point.getName(), true, 500, null)/2;
 		canvas.drawText(point.getName(), point.getX()-textWidth+2,point.getY()+size+16, pBlackLine);
