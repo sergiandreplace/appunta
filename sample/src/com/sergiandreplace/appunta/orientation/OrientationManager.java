@@ -17,10 +17,6 @@
 
 package com.sergiandreplace.appunta.orientation;
 
-import java.util.List;
-
-import com.sergiandreplace.appunta.sample.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -47,7 +43,6 @@ public class OrientationManager implements SensorEventListener {
 	private SensorManager sensorManager;
 	private Orientation orientation = new Orientation();
 	private Orientation oldOrientation;
-	private List<Sensor> sensors;
 	private boolean sensorRunning = false;
 	private OnOrientationChangedListener onOrientationChangeListener;
 	private int axisMode = MODE_COMPASS;
@@ -62,8 +57,8 @@ public class OrientationManager implements SensorEventListener {
 	private float[] mRotationM = new float[9];
 	private float[] mRemapedRotationM = new float[9];
 	private boolean mFailed;
+	private float lowPassValue;
 	
-	private  Activity activity;
 
 	/***
 	 * This constructor will generate and start a Compass Manager
@@ -90,7 +85,6 @@ public class OrientationManager implements SensorEventListener {
 	 *            The activity over this will work
 	 */
 	public void startSensor(Activity activity) {
-		this.activity=activity;
 		if (!sensorRunning) {
 			sensorManager = (SensorManager) activity
 					.getSystemService(Context.SENSOR_SERVICE);
@@ -188,29 +182,28 @@ public class OrientationManager implements SensorEventListener {
 	 * @return and intermediate value
 	 */
 	public float lowPass(float newValue, float lowValue) {
-		float compass;
 		if (Math.abs(newValue - lowValue) < CIRCLE / 2) {
 			if (Math.abs(newValue - lowValue) > SMOOTH_THRESHOLD) {
-				compass = newValue;
+				lowPassValue = newValue;
 			} else {
-				compass = lowValue + SMOOTH_FACTOR * (newValue - lowValue);
+				lowPassValue = lowValue + SMOOTH_FACTOR * (newValue - lowValue);
 			}
 		} else {
 			if (CIRCLE - Math.abs(newValue - lowValue) > SMOOTH_THRESHOLD) {
-				compass = newValue;
+				lowPassValue = newValue;
 			} else {
 				if (lowValue > newValue) {
-					compass = (lowValue + SMOOTH_FACTOR
+					lowPassValue = (lowValue + SMOOTH_FACTOR
 							* ((CIRCLE + newValue - lowValue) % CIRCLE) + CIRCLE)
 							% CIRCLE;
 				} else {
-					compass = (lowValue - SMOOTH_FACTOR
+					lowPassValue = (lowValue - SMOOTH_FACTOR
 							* ((CIRCLE - newValue + lowValue) % CIRCLE) + CIRCLE)
 							% CIRCLE;
 				}
 			}
 		}
-		return compass;
+		return lowPassValue;
 	}
 
 	@Override

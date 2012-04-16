@@ -56,7 +56,7 @@ import com.sergiandreplace.appunta.point.renderer.PointRenderer;
  *
  */
 public abstract class AppuntaView extends View {
-
+	
 	
 	
 	public interface OnPointPressedListener {
@@ -71,7 +71,7 @@ public abstract class AppuntaView extends View {
 	
 	private double maxDistance = DEFAULT_MAX_DISTANCE;
 
-
+	
 	private List<? extends Point> points;
 
 	private OnPointPressedListener onPointPressedListener;
@@ -122,18 +122,20 @@ public abstract class AppuntaView extends View {
 		if (getOrientation()==null) {
 			return;
 		}
+		PointsUtil.calculateDistance(points, location);
 		preRender(canvas);
 		if (getpoints() != null) {
 			for (Point point : getpoints()) {
 				calculatePointCoordinates(point);
-				if (point.getRenderer()!=null){
-					point.getRenderer().drawPoint(point, canvas,orientation);
-					
-				}else{
-					if (getPointRenderer()==null && this.pointRenderer!=null) {
-						setPointRenderer(this.pointRenderer);
-						getPointRenderer().drawPoint(point,canvas,orientation);
-
+				if (point.getDistance()<maxDistance) {
+					if (point.getRenderer()!=null){
+						point.getRenderer().drawPoint(point, canvas,orientation);
+						
+					}else{
+						if (this.pointRenderer!=null) {
+							getPointRenderer().drawPoint(point,canvas,orientation);
+	
+						}
 					}
 				}
 			}
@@ -154,8 +156,11 @@ public abstract class AppuntaView extends View {
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			Point p = findNearestPoint(event.getX(), event.getY());
+			
 			if (p != null && getOnPointPressedListener() != null) {
-				onPointPressedListener.onPointPressed(p);
+				if (Math.abs(p.getX()-event.getX())<50 && Math.abs(p.getY()-event.getY())<50) {
+					onPointPressedListener.onPointPressed(p);
+				}
 			}
 		}
 

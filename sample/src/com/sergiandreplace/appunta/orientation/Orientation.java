@@ -5,7 +5,7 @@ public class Orientation {
 	private float x = 0;
 	private float z = 0;
 	private float y = 0;
-
+	
 	public float getX() {
 		return x;
 	}

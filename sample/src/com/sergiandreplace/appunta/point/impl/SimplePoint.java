@@ -42,7 +42,14 @@ public class SimplePoint implements Point {
 	private PointRenderer renderer;
 	private float x;
 	private float y;
+	private boolean selected;
 	
+	public boolean isSelected() {
+		return selected;
+	}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
 	public SimplePoint(int id, Location location, PointRenderer renderer, String name) {
 		super();
 		this.setLocation(location);

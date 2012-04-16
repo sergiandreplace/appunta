@@ -1,22 +1,24 @@
 package com.sergiandreplace.appunta.ui;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.graphics.PixelFormat;
 import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
-import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 public class CameraView extends SurfaceView implements Callback {
 
 	Camera camera;
 	SurfaceHolder previewHolder;
+	private boolean isPreviewRunning;
 
 	public CameraView(Context ctx) {
 		super(ctx);
@@ -42,24 +44,34 @@ public class CameraView extends SurfaceView implements Callback {
 
 	public void surfaceCreated(SurfaceHolder holder) {
 		camera = Camera.open();
-
+		setCameraDisplayOrientation(camera);
 		try {
-			camera.setPreviewDisplay(previewHolder);
-		} catch (Exception e) {
-           }
+			camera.setPreviewDisplay(holder);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		camera.startPreview();
 	}
 
-	// http://stackoverflow.com/a/6991886/462615
+	
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		Parameters params = camera.getParameters();
+		if (isPreviewRunning) {
+			camera.stopPreview();
+		}
+		setCameraDisplayOrientation(camera);
+		previewCamera();
+	}
+	
 
-		params.setPictureFormat(PixelFormat.JPEG);
-
-		params.set("orientation", "landscape");
-
-		camera.setParameters(params);
-		camera.startPreview();
+	public void previewCamera() {
+		try {
+			camera.setPreviewDisplay(previewHolder);
+			camera.startPreview();
+			isPreviewRunning = true;
+		} catch (Exception e) {
+		}
 	}
 
 	public void surfaceDestroyed(SurfaceHolder arg0) {
@@ -67,16 +79,48 @@ public class CameraView extends SurfaceView implements Callback {
 		camera.release();
 	}
 
-	protected void setDisplayOrientation(Camera camera, int angle) {
+	protected static void setDisplayOrientation(Camera camera, int angle) {
 		Method downPolymorphic;
+		Log.d("Camera", "3.Display angle: " + angle);
+		Log.d("Camera", "-------------------------------");
+		
 		try {
 			downPolymorphic = camera.getClass().getMethod(
 					"setDisplayOrientation", new Class[] { int.class });
 			if (downPolymorphic != null)
 				downPolymorphic.invoke(camera, new Object[] { angle });
 		} catch (Exception e1) {
+			Log.e("Appunta", e1.getMessage() + "");
 		}
+
 	}
-	
-	
+
+
+	private void setCameraDisplayOrientation(Camera camera) {
+	     android.hardware.Camera.CameraInfo info =
+	             new android.hardware.Camera.CameraInfo();
+	     android.hardware.Camera.getCameraInfo(0, info);
+	     Display display = ((WindowManager) getContext().getSystemService(
+					Context.WINDOW_SERVICE)).getDefaultDisplay();
+	     int rotation = display.getRotation();
+	     int degrees = 0;
+	     Log.d("Camera", "-------------------------------");
+	     Log.d("Camera", "1.Mobile Rotation: " + rotation);
+	     switch (rotation) {
+	         case Surface.ROTATION_0: degrees = 0; break;
+	         case Surface.ROTATION_90: degrees = 90; break;
+	         case Surface.ROTATION_180: degrees = 180; break;
+	         case Surface.ROTATION_270: degrees = 270; break;
+	     }
+	     Log.d("Camera", "2.Camera degrees: " + degrees);
+	     
+	     int result;
+	     if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+	         result = (info.orientation + degrees) % 360;
+	         result = (360 - result) % 360;  // compensate the mirror
+	     } else {  // back-facing
+	         result = (info.orientation - degrees + 360) % 360;
+	     }
+	     setDisplayOrientation(camera,result);
+	 }
 }

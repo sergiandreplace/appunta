@@ -4,7 +4,8 @@
     android:versionCode="4"
     android:versionName="20120203" >
 
-    <uses-sdk android:minSdkVersion="7" />
+    <uses-sdk android:minSdkVersion="9"
+        android:targetSdkVersion="9" />
 
     <uses-permission android:name="android.permission.CAMERA" />
 

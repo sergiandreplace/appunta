@@ -56,13 +56,15 @@ public class LocationReader implements LocationListener {
 	 * and Network)
 	 */
 	public void start() {
-		loadLocationManager();
+		
 		gpsProviderActive = true;
 		networkProviderActive = true;
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+		loadLocationManager();
+		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 250,
 				this);
-		locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
-				0, this);
+		locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 300000,
+				250, this);
+		
 
 	}
 

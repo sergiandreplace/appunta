@@ -48,7 +48,7 @@ public class SimplePointRenderer implements PointRenderer {
 			canvas.drawCircle(point.getX(), point.getY(), 3, p);
 			p.setColor(0x99FFFFFF);
 			canvas.drawCircle(point.getX(), point.getY(), 2, p);
-			p.setColor(0xCCFFFFFF);
+			p.setColor(0xFFFFFFFF);
 			canvas.drawCircle(point.getX(), point.getY(), 1, p);
 		}
 		

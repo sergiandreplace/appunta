@@ -74,5 +74,8 @@ public interface Point {
 
 	public abstract void setLocation(Location location);
 
+	public abstract boolean isSelected();
+	
+	public abstract void setSelected(boolean selected);
 	
 }

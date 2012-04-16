@@ -20,14 +20,14 @@ package com.sergiandreplace.appunta.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Surface;
 
-import com.sergiandreplace.appunta.orientation.OrientationManager;
 import com.sergiandreplace.appunta.point.Point;
 
 public class EyeView extends AppuntaView {
 
+	private static double QUADRANT = Math.PI/2;
+	
 	private double camZrot;
 	private double camYrot;
 	private double camXrot;
@@ -48,8 +48,9 @@ public class EyeView extends AppuntaView {
 	private double dz;
 	private double by;
 	private double bx;
-	private double ez =-1.5;
-	
+	private double ez=1;
+	private double ex=300;
+	private double ey=300;
 	
 	public EyeView(Context context) {
 		super(context);
@@ -72,21 +73,21 @@ public class EyeView extends AppuntaView {
 		}
 		if (this.getPhoneRotation()==Surface.ROTATION_180) {
 			camXrot = -getOrientation().getX();
-			camYrot = getOrientation().getY();
-			camZrot = getOrientation().getZ();
+			camYrot = getOrientation().getY(); 
+			camZrot = -getOrientation().getZ();
 			
 		}
 		
 		
 		if (this.getPhoneRotation()==Surface.ROTATION_90){
-			camXrot = -getOrientation().getY();
-			camYrot = getOrientation().getZ();
-			camZrot = getOrientation().getX();
+			camXrot = getOrientation().getX(); //Compass
+			camYrot = -getOrientation().getY();
+			camZrot = +getOrientation().getZ() - QUADRANT ;
 		}
 		if (this.getPhoneRotation()==Surface.ROTATION_270){
-			camXrot = getOrientation().getY();
-			camYrot = getOrientation().getZ();
-			camZrot = getOrientation().getX();
+			camXrot = -getOrientation().getX(); // Compass
+			camYrot = getOrientation().getY();
+			camZrot = +getOrientation().getZ() - QUADRANT ;
 		}
 		
 		
@@ -101,18 +102,30 @@ public class EyeView extends AppuntaView {
 
 		cz = getLocation().getLatitude();
 		cx = getLocation().getLongitude();
-		cy = 0;//getLocation().getAltitude();
+		if (this.getPhoneRotation()==Surface.ROTATION_90 || this.getPhoneRotation()==Surface.ROTATION_270){
+			cy = -getLocation().getAltitude();
+			ey=(getWidth()+getHeight())/2;
+			ex=(getWidth()+getHeight())/2;
+			
+		}else{
+			cy = getLocation().getAltitude();
+			ey=(getWidth()+getHeight())/2;
+			ex=(getWidth()+getHeight())/2;
+			
+		}
+		
 
 	}
 
 	@Override
 	protected void calculatePointCoordinates(Point point) {
 		az = point.getLocation().getLatitude();
-		if (this.getPhoneRotation()==Surface.ROTATION_90) {
-			
-		}
 		ax = point.getLocation().getLongitude();
-		ay = 0;//point.getLocation().getAltitude();
+		if (this.getPhoneRotation()==Surface.ROTATION_90 || this.getPhoneRotation()==Surface.ROTATION_270){
+			ay = -point.getLocation().getAltitude();
+		}else{
+			ay = point.getLocation().getAltitude();
+		}
 
 		// Check this article before trying to only understand a simple comma
 		// http://en.wikipedia.org/wiki/3D_projection#Perspective_projection
@@ -121,31 +134,28 @@ public class EyeView extends AppuntaView {
 		dy = sinCamXrot * (cosCamYrot * (az - cz) + sinCamYrot * (sinCamZrot * (ay - cy) + cosCamZrot * (ax - cx))) + cosCamXrot * (cosCamZrot * (ay - cy) - sinCamZrot * (ax - cx));
 		dz = cosCamXrot * (cosCamYrot * (az - cz) + sinCamYrot * (sinCamZrot * (ay - cy) + cosCamZrot * (ax - cx))) - sinCamXrot * (cosCamZrot * (ay - cy) - sinCamZrot * (ax - cx));
 	
-		Log.v("appunta[" + point.getName() + "]",
-				String.format("DX: %.3f - DY: %.3f - DZ: %.3f", dx, dy, dz));
+		
 		if (dz > 0) {
 			if (this.getPhoneRotation() == Surface.ROTATION_0)  {
-
-				bx = getWidth() / 2 + (dx * getWidth()) / (1 * dz);
-				by = getHeight() / 2 - (dy * getHeight()) / (1 * dz);
+				bx = getWidth() / 2 + (dx * ex) / (ez * dz);
+				by = getHeight() / 2 - (dy * ey) / (ez * dz);
 			}
 			if (this.getPhoneRotation() == Surface.ROTATION_180)  {
 
-				bx = getWidth() / 2 - (dx * getWidth()) / (1 * dz);
-				by = getHeight() / 2 - (dy * getHeight()) / (1 * dz);
+				bx = getWidth() / 2 - (dx * ex) / (ez * dz);
+				by = getHeight() / 2 - (dy * ey) / (ez * dz);
 			}
 			
 			if (this.getPhoneRotation() == Surface.ROTATION_90)  {
 
-				bx = getWidth() / 2 + (dx * getWidth()) / (1 * dz);
-				by = getHeight() / 2 + (dy * getHeight()) / (1 * dz);
+				bx = getWidth() / 2 - (dx * ex) / (ez * dz);
+				by = getHeight() / 2 - (dy * ey) / (ez * dz);
 			}
 			if (this.getPhoneRotation() == Surface.ROTATION_270)  {
 
-				bx = getWidth() / 2 - (dx * getWidth()) / (1 * dz);
-				by = getHeight() / 2 + (dy * getHeight()) / (1 * dz);
+				bx = getWidth() / 2 + (dx * ex) / (ez* dz);
+				by = getHeight() / 2 + (dy * ey) / (ez * dz);
 			}
-			
 			point.setY((float) by);
 			point.setX((float) bx);
 		} else {

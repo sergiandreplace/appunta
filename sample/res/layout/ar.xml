@@ -16,7 +16,7 @@
         android:id="@+id/augmentedView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1" />
+        />
 
     <FrameLayout
         android:id="@+id/frameLayout1"
@@ -37,7 +37,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:background="#fff"
-        android:text="TextView"
         android:textColor="#000"
         android:typeface="monospace" />
 

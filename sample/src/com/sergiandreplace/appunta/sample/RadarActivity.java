@@ -5,8 +5,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.Display;
-import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -96,10 +94,7 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 		Toast.makeText(this, p.getName(), Toast.LENGTH_SHORT).show();
 	}
 	
-	private int getDeviceOrientation() {
-		Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-		return display.getOrientation();
-	}
+
 	
 }
 

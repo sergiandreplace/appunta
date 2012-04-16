@@ -18,7 +18,6 @@
 package com.sergiandreplace.appunta.ui;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -84,7 +83,7 @@ public class RadarView extends AppuntaView {
 	@Override
 	protected void postRender(Canvas canvas) {
 		Paint pointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		pointPaint.setColor(0x66ff0000);
+		pointPaint.setColor(0xff00a0d2);
 		canvas.drawCircle(center, center, 5, pointPaint);
 
 	}

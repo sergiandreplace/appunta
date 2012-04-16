@@ -15,7 +15,7 @@ import com.sergiandreplace.appunta.orientation.OrientationManager;
 import com.sergiandreplace.appunta.orientation.OrientationManager.OnOrientationChangedListener;
 import com.sergiandreplace.appunta.point.Point;
 import com.sergiandreplace.appunta.point.renderer.PointRenderer;
-import com.sergiandreplace.appunta.point.renderer.impl.AugmentedDrawablePointRenderer;
+import com.sergiandreplace.appunta.point.renderer.impl.EyeViewRenderer;
 import com.sergiandreplace.appunta.ui.AppuntaView.OnPointPressedListener;
 import com.sergiandreplace.appunta.ui.CameraView;
 import com.sergiandreplace.appunta.ui.EyeView;
@@ -32,6 +32,8 @@ public class AugmentedRealityActivity extends Activity implements
 	private TextView axisOutputTextView;
 	private String axisOutputString;
 	float x,y,z;
+	private List<Point> points;
+	private List<Point> cpoints;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -50,11 +52,10 @@ public class AugmentedRealityActivity extends Activity implements
 		ar.setOnPointPressedListener(this);
 		cv.setOnPointPressedListener(this);
 
-		PointRenderer arRenderer = new AugmentedDrawablePointRenderer(
-				this.getResources(), R.drawable.city);
+		PointRenderer arRenderer = new EyeViewRenderer(getResources(), R.drawable.circle_selected,R.drawable.circle_unselected);
 
-		List<Point> points = PointsModel.getPoints(arRenderer);
-		List<Point> cpoints = PointsModel.getPoints(null);
+		points = PointsModel.getPoints(arRenderer);
+		cpoints = PointsModel.getPoints(null);
 
 		ar.setPoints(points);
 		ar.setPosition(LocationBuilder.createLocation(41.383804, 2.156719));// BCN
@@ -110,6 +111,14 @@ public class AugmentedRealityActivity extends Activity implements
 	@Override
 	public void onPointPressed(Point p) {
 		Toast.makeText(this, p.getName(), Toast.LENGTH_SHORT).show();
+		unselectAllPoints();
+		p.setSelected(true);
+	}
+
+	private void unselectAllPoints() {
+		for (Point point: points) {
+			point.setSelected(false);
+		}
 	}
 
 }
