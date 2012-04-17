@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sergiandreplace.appunta.location.LocationBuilder;
@@ -16,6 +15,7 @@ import com.sergiandreplace.appunta.orientation.OrientationManager.OnOrientationC
 import com.sergiandreplace.appunta.point.Point;
 import com.sergiandreplace.appunta.point.renderer.PointRenderer;
 import com.sergiandreplace.appunta.point.renderer.impl.EyeViewRenderer;
+import com.sergiandreplace.appunta.point.renderer.impl.SimplePointRenderer;
 import com.sergiandreplace.appunta.ui.AppuntaView.OnPointPressedListener;
 import com.sergiandreplace.appunta.ui.CameraView;
 import com.sergiandreplace.appunta.ui.EyeView;
@@ -29,8 +29,7 @@ public class AugmentedRealityActivity extends Activity implements
 	private CameraView camera;
 	private FrameLayout cameraFrame;
 	private OrientationManager compass;
-	private TextView axisOutputTextView;
-	private String axisOutputString;
+	
 	float x,y,z;
 	private List<Point> points;
 	private List<Point> cpoints;
@@ -48,14 +47,16 @@ public class AugmentedRealityActivity extends Activity implements
 
 		ar = (EyeView) findViewById(R.id.augmentedView1);
 		cv = (RadarView) findViewById(R.id.radarView1);
-		ar.setMaxDistance(10000);
+		ar.setMaxDistance(3);
+		cv.setMaxDistance(1);
+		
 		ar.setOnPointPressedListener(this);
 		cv.setOnPointPressedListener(this);
 
 		PointRenderer arRenderer = new EyeViewRenderer(getResources(), R.drawable.circle_selected,R.drawable.circle_unselected);
 
 		points = PointsModel.getPoints(arRenderer);
-		cpoints = PointsModel.getPoints(null);
+		cpoints = PointsModel.getPoints(new SimplePointRenderer());
 
 		ar.setPoints(points);
 		ar.setPosition(LocationBuilder.createLocation(41.405098,2.192363));// BCN
@@ -68,9 +69,6 @@ public class AugmentedRealityActivity extends Activity implements
 		camera = new CameraView(this);
 		cameraFrame.addView(camera);
 
-	
-		axisOutputTextView = (TextView) findViewById(R.id.AxisOutput);
-		axisOutputString = getString(R.string.AxisOutput);
 
 	}
 
@@ -96,8 +94,7 @@ public class AugmentedRealityActivity extends Activity implements
 	@Override
 	public void onOrientationChanged(Orientation orientation) {
 
-		axisOutputTextView.setText(String.format(axisOutputString,
-				ar.camXrot, ar.camYrot, ar.camZrot, OrientationManager.getPhoneRotation(this)));
+		
 
 		ar.setOrientation(orientation);
 		ar.setPhoneRotation(OrientationManager.getPhoneRotation(this));

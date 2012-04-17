@@ -35,12 +35,13 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 		compass.setOnOrientationChangeListener(this);
 		radar = (RadarView) findViewById(R.id.radarView1);
 		radar.setOnPointPressedListener(this);
-		radar.setMaxDistance(5);
+		radar.setMaxDistance(1);
 		
 		DrawablePointRenderer renderer=new DrawablePointRenderer(this.getResources(), R.drawable.marker);
 		List<Point> points=PointsModel.getPoints(renderer);
 		radar.setPoints(points);
-		radar.setPosition(LocationBuilder.createLocation(41.383804, 2.156719));//BCN
+		radar.setPosition(LocationBuilder.createLocation(41.405098,2.192363));//BCN
+		
 		radar.setRotableBackground(R.drawable.arrow);
 		
 		((SeekBar)findViewById(R.id.seekBar1)).setOnSeekBarChangeListener(this);
