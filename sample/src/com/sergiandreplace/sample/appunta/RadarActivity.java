@@ -1,4 +1,21 @@
-package com.sergiandreplace.appunta.sample;
+/*
+   Copyright Sergi Martínez (@sergiandreplace)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ */
+
+package com.sergiandreplace.sample.appunta;
 
 import java.util.List;
 
@@ -10,7 +27,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sergiandreplace.appunta.location.LocationBuilder;
+import com.sergiandreplace.appunta.location.LocationFactory;
 import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.orientation.OrientationManager;
 import com.sergiandreplace.appunta.orientation.OrientationManager.OnOrientationChangedListener;
@@ -40,7 +57,7 @@ public class RadarActivity extends Activity implements OnOrientationChangedListe
 		DrawablePointRenderer renderer=new DrawablePointRenderer(this.getResources(), R.drawable.marker);
 		List<Point> points=PointsModel.getPoints(renderer);
 		radar.setPoints(points);
-		radar.setPosition(LocationBuilder.createLocation(41.405098,2.192363));//BCN
+		radar.setPosition(LocationFactory.createLocation(41.405098,2.192363));//BCN
 		
 		radar.setRotableBackground(R.drawable.arrow);
 		

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sergiandreplace.appunta.sample"
+    package="com.sergiandreplace.sample.appunta"
     android:versionCode="20120417"
     android:versionName="20120417" >
 
@@ -29,7 +29,7 @@
             android:theme="@android:style/Theme.NoTitleBar" android:screenOrientation="landscape">
         </activity>
         <activity
-            android:name=".AugmentedRealityActivity"
+            android:name="com.sergiandreplace.sample.appunta.EyeViewActivity"
             android:configChanges="orientation"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>

@@ -1,4 +1,21 @@
-package com.sergiandreplace.appunta.sample;
+/*
+   Copyright Sergi Martínez (@sergiandreplace)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ */
+
+package com.sergiandreplace.sample.appunta;
 
 import java.util.List;
 
@@ -8,7 +25,7 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.sergiandreplace.appunta.location.LocationBuilder;
+import com.sergiandreplace.appunta.location.LocationFactory;
 import com.sergiandreplace.appunta.orientation.Orientation;
 import com.sergiandreplace.appunta.orientation.OrientationManager;
 import com.sergiandreplace.appunta.orientation.OrientationManager.OnOrientationChangedListener;
@@ -21,7 +38,7 @@ import com.sergiandreplace.appunta.ui.CameraView;
 import com.sergiandreplace.appunta.ui.EyeView;
 import com.sergiandreplace.appunta.ui.RadarView;
 
-public class AugmentedRealityActivity extends Activity implements
+public class EyeViewActivity extends Activity implements
 		OnOrientationChangedListener, OnPointPressedListener {
 
 	private EyeView ar;
@@ -59,10 +76,10 @@ public class AugmentedRealityActivity extends Activity implements
 		cpoints = PointsModel.getPoints(new SimplePointRenderer());
 
 		ar.setPoints(points);
-		ar.setPosition(LocationBuilder.createLocation(41.405098,2.192363));// BCN
+		ar.setPosition(LocationFactory.createLocation(41.405098,2.192363));// BCN
 		ar.setOnPointPressedListener(this);
 		cv.setPoints(cpoints);
-		cv.setPosition(LocationBuilder.createLocation(41.405098,2.192363));// BCN
+		cv.setPosition(LocationFactory.createLocation(41.405098,2.192363));// BCN
 		cv.setRotableBackground(R.drawable.arrow);
 
 		cameraFrame = (FrameLayout) findViewById(R.id.cameraFrame);
@@ -83,11 +100,13 @@ public class AugmentedRealityActivity extends Activity implements
 	protected void onPause() {
 		super.onPause();
 		compass.stopSensor();
+		
 	}
 
 	@Override
 	protected void onResume() {
 		super.onStart();
+		compass.startSensor(this);
 
 	}
 

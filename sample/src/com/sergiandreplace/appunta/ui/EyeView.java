@@ -19,8 +19,9 @@ package com.sergiandreplace.appunta.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.Surface;
 
 import com.sergiandreplace.appunta.math3d.Math3dUtil;
 import com.sergiandreplace.appunta.math3d.Trig1;
@@ -49,8 +50,12 @@ public class EyeView extends AppuntaView {
 	private Vector1 screenRot=new Vector1();
 	private Trig1 	screenRotTrig=new Trig1();
 	
+
+
+	
 	public EyeView(Context context) {
 		super(context);
+		
 		init();
 	}
 
@@ -66,16 +71,22 @@ public class EyeView extends AppuntaView {
 	
 	private void init() {
 		screenRatio.z=SCREEN_DEPTH;
+
+
+
 	}
 
 	@Override
     protected void preRender(Canvas canvas) {
+		
 			Math3dUtil.getCamRotation(getOrientation(), getPhoneRotation(), camRot, camTrig, screenRot, screenRotTrig);
             Math3dUtil.getPointPos(getLocation(), getPhoneRotation(), camPos);
             screenRatio.y=(getWidth()+getHeight())/2;
             screenRatio.x=(getWidth()+getHeight())/2;
             screenSize.y=getHeight();
             screenSize.x=getWidth();
+            
+	       
     }
 
 	@Override

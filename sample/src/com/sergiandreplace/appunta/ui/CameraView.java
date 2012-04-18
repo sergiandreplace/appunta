@@ -1,3 +1,20 @@
+/*
+   Copyright Sergi Martínez (@sergiandreplace)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ */
+
 package com.sergiandreplace.appunta.ui;
 
 import java.io.IOException;
@@ -6,7 +23,6 @@ import java.lang.reflect.Method;
 import android.content.Context;
 import android.hardware.Camera;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -28,7 +44,6 @@ public class CameraView extends SurfaceView implements Callback {
 
 	private void init() {
 		previewHolder = this.getHolder();
-		previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		previewHolder.addCallback(this);
 	}
 
@@ -81,16 +96,13 @@ public class CameraView extends SurfaceView implements Callback {
 
 	protected static void setDisplayOrientation(Camera camera, int angle) {
 		Method downPolymorphic;
-		Log.d("Camera", "3.Display angle: " + angle);
-		Log.d("Camera", "-------------------------------");
-		
+			
 		try {
 			downPolymorphic = camera.getClass().getMethod(
 					"setDisplayOrientation", new Class[] { int.class });
 			if (downPolymorphic != null)
 				downPolymorphic.invoke(camera, new Object[] { angle });
 		} catch (Exception e1) {
-			Log.e("Appunta", e1.getMessage() + "");
 		}
 
 	}
@@ -104,15 +116,12 @@ public class CameraView extends SurfaceView implements Callback {
 					Context.WINDOW_SERVICE)).getDefaultDisplay();
 	     int rotation = display.getRotation();
 	     int degrees = 0;
-	     Log.d("Camera", "-------------------------------");
-	     Log.d("Camera", "1.Mobile Rotation: " + rotation);
 	     switch (rotation) {
 	         case Surface.ROTATION_0: degrees = 0; break;
 	         case Surface.ROTATION_90: degrees = 90; break;
 	         case Surface.ROTATION_180: degrees = 180; break;
 	         case Surface.ROTATION_270: degrees = 270; break;
 	     }
-	     Log.d("Camera", "2.Camera degrees: " + degrees);
 	     
 	     int result;
 	     if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
