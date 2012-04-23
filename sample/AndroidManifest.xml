@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sergiandreplace.sample.appunta"
+    package="com.appunta.sample"
     android:versionCode="20120417"
     android:versionName="20120417" >
 
-    <uses-sdk android:minSdkVersion="9"
+    <uses-sdk
+        android:minSdkVersion="9"
         android:targetSdkVersion="9" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -26,11 +27,11 @@
         <activity
             android:name="RadarActivity"
             android:configChanges="orientation"
-            android:theme="@android:style/Theme.NoTitleBar" android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.sergiandreplace.sample.appunta.EyeViewActivity"
-            android:configChanges="orientation"
+            android:name=".EyeViewActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
     </application>

@@ -12,7 +12,7 @@
 
     </FrameLayout>
 
-    <com.sergiandreplace.appunta.ui.EyeView
+    <com.appunta.android.ui.EyeView
         android:id="@+id/augmentedView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -23,7 +23,7 @@
         android:layout_width="96dp"
         android:layout_height="96dp" android:layout_alignParentTop="true" android:layout_alignParentRight="true">
 
-        <com.sergiandreplace.appunta.ui.RadarView
+        <com.appunta.android.ui.RadarView
             android:id="@+id/radarView1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" android:background="@drawable/bkg_small"/>

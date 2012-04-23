@@ -3,88 +3,55 @@
     android:id="@+id/out"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" android:background="@drawable/background_sky">
+    android:background="@drawable/background_sky"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/ImageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo" />
 
     <LinearLayout
+        android:id="@+id/LinearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:orientation="horizontal" android:paddingTop="50dp">
 
-        <ImageView
-            android:id="@+id/ImageView1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+        <TextView
+            android:id="@+id/btnRadar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:src="@drawable/logo" />
+            android:drawableTop="@drawable/compass"
+            android:gravity="center_horizontal"
+            android:shadowColor="#5000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="3"
+            android:text="@string/radar"
+            android:textColor="@color/Text"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
 
-        <TableLayout
-            android:id="@+id/tableLayout1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1" >
-
-            <TableRow 
-                android:id="@+id/tableRow1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <LinearLayout
-                    android:id="@+id/btnRadar"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="10dp" >
-
-                    <ImageView
-                        android:id="@+id/imageView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:src="@drawable/compass" />
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/radar"
-                        android:textColor="@color/Text"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:typeface="serif" android:shadowColor="#5000" android:shadowDx="2" android:shadowDy="2" android:shadowRadius="3"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/btnAR"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:padding="10dp" >
-
-                    <ImageView
-                        android:id="@+id/ImageView01"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:src="@drawable/panorama" />
-
-                    <TextView
-                        android:id="@+id/TextView01"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/ra"
-                        android:textColor="@color/Text"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:typeface="serif" android:shadowColor="#5000" android:shadowDx="2" android:shadowDy="2" android:shadowRadius="3"/>
-                </LinearLayout>
-            </TableRow>
-        </TableLayout>
+        <TextView
+            android:id="@+id/btnAR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/panorama"
+            android:gravity="center_horizontal"
+            android:shadowColor="#5000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="3"
+            android:text="@string/ra"
+            android:textColor="@color/Text"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
     </LinearLayout>
 
 </LinearLayout>
