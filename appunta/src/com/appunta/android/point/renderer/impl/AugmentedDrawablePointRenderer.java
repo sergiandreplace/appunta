@@ -41,13 +41,12 @@ public class AugmentedDrawablePointRenderer implements PointRenderer {
 	private Paint pCircle;
 	/***
 	 * Creates and object able to draw a drawable resource in a Canvas
-	 * @param res A resources object in order to retrieve the drawable
-	 * @param id Id of the drawable
 	 */
 	public AugmentedDrawablePointRenderer() {
 	}
 	/***
 	 * This methods paints the drawable received in constructor and writes the point name beside it
+	 * 
 	 */
 	@Override
 	public void drawPoint(Point point, Canvas canvas, Orientation orientation) {

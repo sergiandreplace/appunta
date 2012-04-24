@@ -68,9 +68,9 @@ public class PointsUtil {
 	/**
 	 * Computes the distance in kilometers between two points on Earth.
 	 * 
-	 * @param location1
+	 * @param location
 	 *            Latitude and longitude of the first point
-	 * @param location2
+	 * @param otherLocation
 	 *            Latitude and longitude of the second point
 	 * @return Distance between the two points in kilometers.
 	 */

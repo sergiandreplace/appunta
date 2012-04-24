@@ -132,7 +132,7 @@ public class LocationReader implements LocationListener {
 	/**
 	 * Sets the flag of the current Netowork status
 	 * 
-	 * @param gpsProviderActive
+	 * @param networkProviderActive
 	 *            A boolean value indicating if Network is active
 	 */
 	private void setNetworkProviderActive(boolean networkProviderActive) {
@@ -168,7 +168,6 @@ public class LocationReader implements LocationListener {
 	/**
 	 * Sets a listener to warn when location is obtained
 	 * 
-	 * @param onNoProvidersListener
 	 */
 	public void setOnLocationObtainedListener(
 			OnLocationObtainedListener onLocationObtainedListener) {

@@ -33,7 +33,6 @@ public interface PointRenderer {
 	 * information to perform all kind of drawing.
 	 * @param point The point being drawn
 	 * @param canvas The canvas where to draw
-	 * @param azimuth The current azimuth
 	 */
 	public void drawPoint(Point point, Canvas canvas, Orientation orientation);
 }

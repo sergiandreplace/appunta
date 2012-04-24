@@ -61,7 +61,7 @@ public interface Point {
 
 	/***
 	 * A unique id
-	 * @return
+	 * @return an id
 	 */
 	public abstract int getId();
 

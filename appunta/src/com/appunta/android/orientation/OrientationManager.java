@@ -260,7 +260,7 @@ public class OrientationManager implements SensorEventListener {
 		 * This method will be invoked when the magnetic orientation of the
 		 * phone changed
 		 * 
-		 * @param azimuth
+		 * @param orientation
 		 *            Orientation on degrees. 360-0 is north.
 		 */
 		public void onOrientationChanged(Orientation orientation);

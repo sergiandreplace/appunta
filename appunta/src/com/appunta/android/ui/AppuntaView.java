@@ -43,7 +43,7 @@ import com.appunta.android.point.renderer.PointRenderer;
  * <li>The <b>preRender</b> phase triggers the method {@link #preRender}, used to draw all needed elements used in
  * the background.</li>
  * 
- * <li>In the <b>pointRendering</b> phase, the method {@link #calculatePointCoordinates(SimplePoint)} is invoked per each on of the points, 
+ * <li>In the <b>pointRendering</b> phase, the method calculatePointCoordinates(SimplePoint) is invoked per each on of the points, 
  * in order to calculate the screen coordinates for each one of them. Then, they are painted by calling
  * their PaintRenderer.
  * </li>
