@@ -20,7 +20,6 @@ package com.appunta.android.ui;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.appunta.android.math3d.Math3dUtil;
 import com.appunta.android.math3d.Trig1;
