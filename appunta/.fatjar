@@ -1,10 +1,10 @@
 #Fat Jar Configuration File
-#Tue Apr 24 10:28:31 CEST 2012
+#Wed May 02 16:49:02 CEST 2012
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=false
-jarname=appunta-1.0.0.jar
+jarname=appunta-1.0.1.jar
 manifest.mergeall=true
 manifest.mainclass=
 manifest.file=<createnew>

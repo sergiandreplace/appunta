@@ -18,7 +18,6 @@
 package com.appunta.android.math3d;
 
 import android.location.Location;
-import android.util.Log;
 import android.view.Surface;
 
 import com.appunta.android.orientation.Orientation;
@@ -126,13 +125,8 @@ public class Math3dUtil {
 		    	viewPortPos.x = -(inRelativePos.x * inScreenRatio.x) / (inScreenRatio.z* inRelativePos.z);
 		    	viewPortPos.y = (inRelativePos.y * inScreenRatio.y) / (inScreenRatio.z * inRelativePos.z);
 		    }
-	        Log.d("Relative", "   X relative: " + inRelativePos.x + "    Y relative: " + inRelativePos.y);
-		    Log.d("viewport", "x:"+viewPortPos.x+"       y:"+viewPortPos.y);
-
-		    Log.d("calculation", "-([" +inRelativePos.y+"] * [" + inScreenRatio.y+"]) / (["+inScreenRatio.z * inRelativePos.z+"]);");
 		    outScreenPos.x=inScreenSize.x / 2 +  viewPortPos.x * inScreenRotTrig.cos - viewPortPos.y * inScreenRotTrig.sin;
 		    outScreenPos.y=inScreenSize.y /2 +  viewPortPos.x * inScreenRotTrig.sin + viewPortPos.y * inScreenRotTrig.cos;
-		    Log.d("outscreen", "x:"+outScreenPos.x+"       y:"+outScreenPos.y);		        
 		} else {
 			outScreenPos.x=-15000;
 			outScreenPos.y=-15000;

@@ -58,7 +58,7 @@ public class RadarView extends AppuntaView {
 				heightMeasureSpec);
 
 		int size = Math.max(measuredWidth, measuredHeight);
-		center = getWidth() / 2;
+		center = size / 2;
 		setMeasuredDimension(size, size);
 	}
 
