@@ -41,6 +41,7 @@ import com.appunta.android.ui.RadarView;
 public class EyeViewActivity extends Activity implements
 		OnOrientationChangedListener, OnPointPressedListener {
 
+	private static final int MAX_DISTANCE = 4000;
 	private EyeView ar;
 	private RadarView cv;
 	private CameraView camera;
@@ -64,8 +65,8 @@ public class EyeViewActivity extends Activity implements
 
 		ar = (EyeView) findViewById(R.id.augmentedView1);
 		cv = (RadarView) findViewById(R.id.radarView1);
-		ar.setMaxDistance(3);
-		cv.setMaxDistance(1);
+		ar.setMaxDistance(MAX_DISTANCE);
+		cv.setMaxDistance(MAX_DISTANCE);
 		
 		ar.setOnPointPressedListener(this);
 		cv.setOnPointPressedListener(this);
@@ -76,10 +77,10 @@ public class EyeViewActivity extends Activity implements
 		cpoints = PointsModel.getPoints(new SimplePointRenderer());
 
 		ar.setPoints(points);
-		ar.setPosition(LocationFactory.createLocation(41.405098,2.192363,1));// BCN
+		ar.setPosition(LocationFactory.createLocation(41.383873,2.156574,12));// BCN
 		ar.setOnPointPressedListener(this);
 		cv.setPoints(cpoints);
-		cv.setPosition(LocationFactory.createLocation(41.405098,2.192363,1));// BCN
+		cv.setPosition(LocationFactory.createLocation(41.383873,2.156574,12));// BCN
 		cv.setRotableBackground(R.drawable.arrow);
 
 		cameraFrame = (FrameLayout) findViewById(R.id.cameraFrame);
